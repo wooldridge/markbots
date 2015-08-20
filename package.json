@@ -1,0 +1,16 @@
+{
+  "name": "camlogic",
+  "version": "0.0.1",
+  "description": "Capture photos with a Raspberry Pi and save them to MarkLogic.",
+  "main": "cam.js",
+  "dependencies": {
+    "marklogic": "^1.0.3",
+    "raspicam": "^0.2.13"
+  },
+  "scripts": {
+    "start": "node capture.js"
+  }
+  "devDependencies": {},
+  "author": "Mike Wooldridge <mike@hellion.org>"m
+  "license": "MIT"
+}
