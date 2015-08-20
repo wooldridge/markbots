@@ -9,8 +9,12 @@
   },
   "scripts": {
     "start": "node capture.js"
-  }
+  },
   "devDependencies": {},
-  "author": "Mike Wooldridge <mike@hellion.org>"m
-  "license": "MIT"
+  "author": "Mike Wooldridge <mike@hellion.org>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wooldridge/camlogic"
+  }
 }
