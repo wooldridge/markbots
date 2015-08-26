@@ -4,8 +4,12 @@
   "description": "Capture photos with a Raspberry Pi and save them to MarkLogic.",
   "main": "cam.js",
   "dependencies": {
+    "express": "^4.13.3",
+    "johnny-five": "^0.8.87",
     "marklogic": "^1.0.3",
-    "raspicam": "^0.2.13"
+    "raspi-io": "^3.3.5",
+    "raspicam": "^0.2.13",
+    "socket.io": "^1.3.6"
   },
   "scripts": {
     "start": "node capture.js"
