@@ -10,7 +10,7 @@ var board = new five.Board({
     io: new raspi()
 });
 
-var m = new Date();
+/* var m = new Date();
 var dateString =
   m.getFullYear() +'-'+
   ('0' + (m.getMonth()+1)).slice(-2) +'-'+
@@ -22,6 +22,11 @@ var dateString =
 var output = './photos/' + dateString + '.jpg';
 config.raspicam.output = output;
 
+*/
+
+var output = '';
+var dateString = '';
+config.raspicam.output = output;
 var camera = new raspicam(config.raspicam);
 var db = marklogic.createDatabaseClient(config.marklogic);
 
@@ -72,4 +77,39 @@ daemon.start(function() {
     });
 });
 
-camera.start();
+
+board.on('ready', function () {
+    console.log('board is ready');
+
+    var motion = new five.Motion('P1-7');
+
+    motion.on('calibrated', function () {
+      console.log('calibrated');
+    });
+
+    motion.on('motionstart', function () {
+      console.log('motionstart');
+
+      var m = new Date();
+      dateString =
+          m.getFullYear() +'-'+
+          ('0' + (m.getMonth()+1)).slice(-2) +'-'+
+          ('0' + m.getDate()).slice(-2) + '_' +
+          ('0' + m.getHours()).slice(-2) + '-' +
+          ('0' + m.getMinutes()).slice(-2) + '-' +
+          ('0' + m.getSeconds()).slice(-2);
+
+      output = './photos/' + dateString + '.jpg';
+
+      camera.set('output', output);
+
+      camera.start();
+    });
+
+    motion.on('motionend', function () {
+      console.log('motionend');
+
+    });
+
+});
+
