@@ -4,36 +4,27 @@ var config = require('./config'),
     gpsd = require('node-gpsd'),
     fs = require('fs')
     raspi = require('raspi-io'),
-    five = require('johnny-five');
+    five = require('johnny-five'),
+    express = require('express');
 
+// Set up MOTION
+var motion = false;
 var board = new five.Board({
     io: new raspi()
 });
 
-/* var m = new Date();
-var dateString =
-  m.getFullYear() +'-'+
-  ('0' + (m.getMonth()+1)).slice(-2) +'-'+
-  ('0' + m.getDate()).slice(-2) + '_' +
-  ('0' + m.getHours()).slice(-2) + '-' +
-  ('0' + m.getMinutes()).slice(-2) + '-' +
-  ('0' + m.getSeconds()).slice(-2);
-
-var output = './photos/' + dateString + '.jpg';
-config.raspicam.output = output;
-
-*/
-
+// Set up CAMERA
 var output = '';
 var dateString = '';
 config.raspicam.output = output;
 var camera = new raspicam(config.raspicam);
 var db = marklogic.createDatabaseClient(config.marklogic);
 
+// Set up GPS
 var daemon = new gpsd.Daemon();
-
 var gps = {};
 
+// CAMERA events
 camera.on('start', function(err, timestamp){
   console.log('photo started at ' + timestamp );
 });
@@ -66,6 +57,7 @@ camera.on('exit', function(timestamp){
   camera.stop();
 });
 
+// GPS events
 daemon.start(function() {
     var listener = new gpsd.Listener({parse: true});
     listener.connect(function() {
@@ -77,7 +69,7 @@ daemon.start(function() {
     });
 });
 
-
+// MOTION events
 board.on('ready', function () {
     console.log('board is ready');
 
@@ -89,21 +81,9 @@ board.on('ready', function () {
 
     motion.on('motionstart', function () {
       console.log('motionstart');
-
-      var m = new Date();
-      dateString =
-          m.getFullYear() +'-'+
-          ('0' + (m.getMonth()+1)).slice(-2) +'-'+
-          ('0' + m.getDate()).slice(-2) + '_' +
-          ('0' + m.getHours()).slice(-2) + '-' +
-          ('0' + m.getMinutes()).slice(-2) + '-' +
-          ('0' + m.getSeconds()).slice(-2);
-
-      output = './photos/' + dateString + '.jpg';
-
-      camera.set('output', output);
-
-      camera.start();
+      if (motion) {
+        capturePhoto();
+      }
     });
 
     motion.on('motionend', function () {
@@ -112,4 +92,24 @@ board.on('ready', function () {
     });
 
 });
+
+// CAPTURE PHOTO
+var capturePhoto = function () {
+  var m = new Date();
+  dateString =
+      m.getFullYear() +'-'+
+      ('0' + (m.getMonth()+1)).slice(-2) +'-'+
+      ('0' + m.getDate()).slice(-2) + '_' +
+      ('0' + m.getHours()).slice(-2) + '-' +
+      ('0' + m.getMinutes()).slice(-2) + '-' +
+      ('0' + m.getSeconds()).slice(-2);
+
+  output = './photos/' + dateString + '.jpg';
+
+  camera.set('output', output);
+
+  camera.start();
+};
+
+// SAVE PHOTO TO MARKLOGIC
 

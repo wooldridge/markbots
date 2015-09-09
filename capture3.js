@@ -15,7 +15,8 @@ var io = require('socket.io').listen(app.listen(port, function () {
 
 io.sockets.on('connection', function (socket) {
     socket.emit('message', { message: 'welcome' });
-    socket.on('send', function (data) {
+    socket.on('message', function (data) {
+        console.log(data.duration);
         io.sockets.emit('message', data);
     });
 });

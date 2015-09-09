@@ -1,12 +1,50 @@
 <html>
 
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
-<input type="button" value="send" id="send" />
+<input type="button" value="get photo" id="getPhoto" />
+<input type="button" value="get location" id="getGps" />
+<input type="button" value="reset GPS" id="resetGps" />
+<input type="button" value="toggle motion" id="toggleMotion" />
+<br />
+<div id="message"></div>
+<img id="latest" src="" />
 
 <script>
 
+var socket = io.connect('http://10.0.0.8:3001');
 
+$(document).ready(function () {
+  $("#getPhoto").click(function () {
+    socket.emit('getPhoto', {foo: "bar"});
+  });
+  $("#getGps").click(function () {
+    socket.emit('getGps', {foo: "bar"});
+  });
+  $("#resetGps").click(function () {
+    socket.emit('resetGps', {foo: "bar"});
+  });
+  $("#toggleMotion").click(function () {
+    socket.emit('toggleMotion', {foo: "bar"});
+  });
+});
+
+socket.on('photo', function (data) {
+  console.log(data.filename);
+  $('img#latest').attr('src', 'http://admin:admin@10.0.0.14:8000/v1/documents?uri=' + 
+    data.filename);
+});
+
+socket.on('gps', function (data) {
+  console.log(data.coords);
+  $('div#message').html(data.coords);
+});
+
+socket.on('motion', function (data) {
+  console.log(data.value);
+  $('div#message').html('motion is now ' + data.value);
+});
 
 </script>
 
