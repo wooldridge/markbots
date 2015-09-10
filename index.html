@@ -13,7 +13,9 @@
 
 <script>
 
+var mlhost = '10.0.0.14';
 var socket = io.connect('http://10.0.0.8:3001');
+//var socket = io.connect('http://172.16.17.66:3001');
 
 $(document).ready(function () {
   $("#getPhoto").click(function () {
@@ -32,8 +34,7 @@ $(document).ready(function () {
 
 socket.on('photo', function (data) {
   console.log(data.filename);
-  $('img#latest').attr('src', 'http://admin:admin@10.0.0.14:8000/v1/documents?uri=' + 
-    data.filename);
+  $('img#latest').attr('src', data.url);
 });
 
 socket.on('gps', function (data) {

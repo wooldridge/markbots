@@ -1,5 +1,9 @@
 var config = {};
 
+config.bot = {
+  id: 'markbot1'
+}
+
 // https://www.raspberrypi.org/documentation/raspbian/applications/camera.md
 config.raspicam = {
   mode: "photo",
@@ -11,6 +15,7 @@ config.raspicam = {
 
 config.marklogic = {
   host:	'10.0.0.14',
+  //host:	'172.16.14.70',
   port:	'8000',
   user:	'admin',
   password: 'admin',
