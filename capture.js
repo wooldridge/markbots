@@ -157,12 +157,12 @@ var capturePhoto = function () {
 // SAVE PHOTO TO MARKLOGIC
 var savePhoto = function (buffer) {
   db.documents.write({
-    uri: dateString + '.jpg', 
+    uri: dateString + '.jpg',
     content: buffer,
     collections: ['photos'],
     properties: {
       id: config.bot.id,
-      lat: gps.lat, 
+      lat: gps.lat,
       lon: gps.lon,
       trigger: trigger,
       ts: dateString
@@ -176,10 +176,10 @@ var savePhoto = function (buffer) {
       io.sockets.emit('photo', {
         filename: dateString + '.jpg',
         url: 'http://' + config.marklogic.host + ':' +
-             config.marklogic.port + '/v1/documents?uri=' + 
+             config.marklogic.port + '/v1/documents?uri=' +
              dateString + '.jpg'
       });
-    }, 
+    },
     function(error) {
       console.log(JSON.stringify(error, null, 2));
     }
