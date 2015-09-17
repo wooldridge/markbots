@@ -1,0 +1,38 @@
+<html>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<input type="button" value="get photos" id="getPhotos" />
+<br />
+<div id="result"></div>
+<img id="latest" src="" />
+
+<script>
+
+function getPhotos() {
+  $.ajax('http://localhost:3000/api/data')
+    .done(function(data) {
+      if ( console && console.log ) {
+        console.log( data );
+      }
+      data.forEach(function(res) {
+        console.log("URI: " + res.uri);
+        var img = '<img src="http://snippet.demo.marklogic.com:8000/v1/documents?uri=' +
+                  res.uri +
+                  '" style="width: 200px" />';
+        $('#result').append(img);
+      });
+    }
+  );
+}
+
+$(document).ready(function () {
+  $("#getPhotos").click(function () {
+    getPhotos();
+  });
+  getPhotos();
+});
+
+</script>
+
+</html>
