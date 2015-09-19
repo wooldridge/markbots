@@ -5,7 +5,7 @@ var config = require('./config'),
 // Set up EXPRESS
 var app = express(),
     port = 3000,
-    router = express.Router();;
+    router = express.Router();
 app.use(express.static(__dirname + '/'));
 
 // Set up MARKLOGIC
@@ -19,7 +19,6 @@ router.use(function(req, res, next) {
 });
 
 // GET photo data
-// @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
 router.get('/data', function(req, res, next) {
   // params from URL
   var start = req.query.start ? req.query.start : 1,
@@ -27,7 +26,7 @@ router.get('/data', function(req, res, next) {
       sort = req.query.sort ? req.query.sort : 'descending',
       min = req.query.min ? req.query.min : '1970-01-01T00:00:00-07:00',
       max = req.query.max ? req.query.max : '2020-12-31T23:59:59-07:00',
-      tr = req.query.tr ? req.query.tr : 'motion',
+      tr = req.query.tr ? req.query.tr : '',
       id = req.query.id ? req.query.id : '';
   db.documents.query(
     q.where(
@@ -65,7 +64,9 @@ router.get('/data', function(req, res, next) {
         tr,
         q.fragmentScope('properties')
       )
-    ).orderBy(
+    )
+    // @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
+    .orderBy(
       q.sort(
         q.element(q.qname('http://marklogic.com/xdmp/property', 'last-modified')),
         sort
