@@ -28,3 +28,5 @@ node_modules
 
 # Captured photos
 photos/*
+
+config.js
