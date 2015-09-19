@@ -16,7 +16,7 @@ config.raspicam = {
 config.marklogic = {
   //host:	'10.0.0.14',
   //host:	'172.16.14.70',
-  host:	'snippet.demo.marklogic.com',
+  host: 'snippet.demo.marklogic.com',
   port:	'8000',
   user:	'admin',
   password: 'admin',
