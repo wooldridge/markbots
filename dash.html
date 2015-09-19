@@ -10,6 +10,7 @@
 <script>
 
 function getPhotos() {
+  // TODO make this configurable
   $.ajax('http://localhost:3000/api/data')
     .done(function(data) {
       if ( console && console.log ) {
@@ -17,6 +18,7 @@ function getPhotos() {
       }
       data.forEach(function(res) {
         console.log("URI: " + res.uri);
+        // TODO make this configurable
         var img = '<img src="http://snippet.demo.marklogic.com:8000/v1/documents?uri=' +
                   res.uri +
                   '" style="width: 200px" />';
