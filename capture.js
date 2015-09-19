@@ -19,7 +19,7 @@ var io = require('socket.io').listen(app.listen(port, function () {
 }));
 
 // Set up MOTION
-var motionFlag = false;
+var motionFlag = true;
 var board = new five.Board({
     io: new raspi()
 });
@@ -66,6 +66,7 @@ daemon.start(function() {
         console.log('gpsd connected');
         listener.watch();
         listener.on('TPV', function (data) {
+	  console.log('gps received');
           gps = data;
         });
     });
@@ -161,10 +162,11 @@ var savePhoto = function (buffer) {
     content: buffer,
     collections: ['photos'],
     properties: {
+      cat: 'photo',
       id: config.bot.id,
       lat: gps.lat,
       lon: gps.lon,
-      trigger: trigger,
+      tr: trigger,
       ts: dateString
     }
   }).result(
