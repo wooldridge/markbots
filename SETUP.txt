@@ -1,0 +1,105 @@
+MARKBOT SETUP
+
+Raspberry Pi 2 Model B
+http://www.amazon.com/gp/product/B00MV6TAJI
+
+1. Follow instructions in Quick Start Guide to set up Raspbian operating system using NOOBS (New Out of Box Software).
+
+Note: During one setup my SD card was not showing any available space when inserted on the Raspberry Pi, which meant I couldn't install the Raspbian software via NOOBS. I used the adapter that came with the SD card to insert the card into my MacBook Pro. I opened the Mac OS X Disk Tools application and ran the Verify and Repair tools on the SD card. After that, I inserted the SD card back into my Raspberry Pi and this time it showed available space and installation could proceed.
+
+2. Start up the Raspberry Pi (user: pi password: raspberry) and yse the raspi-config tool to do the following:
+
+- Set Internationalisation Options to: en_US.UTF-8 UTF-8 (there might be a better option since I've had keyboard character issues on my other Raspberry Pi)
+- Enable support for Raspberry Pi Camera
+- Set boot options to open in GUI as user pi
+- Change regional timezone settings
+
+3. To set up Wifi, shut down the Raspberry Pi, insert the USB Wifi adapter, and restart the Raspberry Pi. Then:
+
+Left-click the screen icons in the upper right, select your Wifi network, and enter your Wifi password.
+
+4. Install Node.js v0.10.40 on the Raspberry Pi:
+
+cd /usr/src
+sudo wget https://nodejs.org/dist/v0.10.40/node-v0.10.40.tar.gz
+sudo tar -zxvf node-v0.10.40.tar.gz
+cd node-v0.10.40/
+sudo ./configure
+# The following takes a long time, an hour or more
+sudo make
+sudo make install
+
+# confirm node works:
+node -v
+# should return
+v0.10.40
+
+5. Set up access to github
+
+https://help.github.com/articles/generating-ssh-keys/
+
+Access to GitHub site features is problematic with the Raspberry Pi browser. I needed to generate my SSH key on the Raspberry Pi and then email to myself. I could then input the key in the GitHub settings via a browser on my Mac.
+
+6. Clone markbots project onto Raspberry Pi:
+
+sudo git clone https://wooldridge@github.com/wooldridge/markbots
+
+7. Set up the Raspberry Pi camera:
+
+https://www.raspberrypi.org/documentation/configuration/camera.md
+
+Plug in the camera with the blue stripe toward Ethernet port.
+
+Run the following as suggested (took a long time, 15 minutes?):
+
+sudo apt-get update
+sudo apt-get upgrade
+
+To test, run:
+raspistill -v -o test.jpg
+
+(Should save an image to the current directory)
+
+8. Set up the GPS receiver:
+
+Plug in the USB-to-TTL serial cable:
+http://www.amazon.com/gp/product/B00QT7LQ88
+http://www.adafruit.com/products/954
+
+https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/setting-everything-up
+
+Connect cable wires to GPS device:
+
+Red -> VIN
+Black -> Grd
+Green -> Rx
+White -> Tx
+
+Plug the cable into one of the Raspberry Pi's USB ports.
+
+Set up software:
+
+sudo apt-get install gpsd gpsd-clients python-gps
+sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+
+To test:
+
+cgps -s
+
+12. Set up PIR motion sensor
+
+https://www.raspberrypi.org/learning/parent-detector/worksheet/
+
+13. Install Node.js dependencies. From the markbots directory:
+
+sudo npm install
+
+(Takes a while, 15 minutes)
+
+
+TEST MARKBOT
+
+cd markbots
+sudo chmod 777 *.js
+sudo node capture
+
