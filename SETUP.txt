@@ -92,6 +92,9 @@ https://www.raspberrypi.org/learning/parent-detector/worksheet/
 
 13. Install Node.js dependencies. From the markbots directory:
 
+# perform separately, seems to cause problems during full npm install
+sudo npm --save install raspi-io
+
 sudo npm install
 
 (Takes a while, 15 minutes)
