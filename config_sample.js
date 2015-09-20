@@ -1,7 +1,7 @@
 var config = {};
 
 config.bot = {
-  id: 'BOTID' // e.g., 'markbot1'
+  id: 'BOT_ID' // e.g., 'markbot1'
 }
 
 // https://www.raspberrypi.org/documentation/raspbian/applications/camera.md
