@@ -9,7 +9,7 @@ config.raspicam = {
   mode: "photo",
   preview: '0,0,640,480',
   encoding: "jpg",
-  timeout: 2000, // millisecs
+  timeout: 1000, // millisecs
   verbose: true
 }
 
