@@ -1,38 +1,125 @@
 <html>
 
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"> -->
 
-<input type="button" value="get photos" id="getPhotos" />
-<br />
-<div id="result"></div>
-<img id="latest" src="" />
+<div id="map-canvas" style="width: 600px; height: 300px"></div>
+
+<div style="width: 600px; height: 40px;">
+  <form id="filters">
+    <div style="position: relative; float: left; padding: 5px;">
+      <input name="min" type="text" id="start-date" placeholder="Start" style="width: 170px;" />
+    </div>
+    <div style="position: relative; float: left; padding: 5px;">
+      <input name="max" type="text" id="end-date" placeholder="End" style="width: 170px;">
+    </div>
+    <div style="position: relative; float: left; padding: 5px;">
+      <select name="tr" id="trigger">
+        <option value="">All</option>
+        <option value="motion">Motion</option>
+        <option value="user">User</option>
+      </select>
+    </div>
+    <div style="position: relative; float: left; padding: 5px;">
+      <select name="id" id="botId">
+        <option value="">All</option>
+        <option value="markbot1">markbot1</option>
+        <option value="markbot2">markbot2</option>
+      </select>
+    </div>
+  </form>
+</div>
+
+<div id="result" style="width: 600px;"></div>
+
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="//maps.googleapis.com/maps/api/js?AIzaSyDUsZCP04vN4oxSQBcHmz1YGbTq8RTMEvw"></script>
 
 <script>
 
-function getPhotos() {
-  // TODO make this configurable
-  $.ajax('http://localhost:3000/api/data')
-    .done(function(data) {
-      if ( console && console.log ) {
-        console.log( data );
-      }
-      data.forEach(function(res) {
-        console.log("URI: " + res.uri);
-        // TODO make this configurable
-        var img = '<img src="http://snippet.demo.marklogic.com:8000/v1/documents?uri=' +
-                  res.uri +
-                  '" style="width: 200px" />';
-        $('#result').append(img);
-      });
-    }
-  );
-}
-
 $(document).ready(function () {
-  $("#getPhotos").click(function () {
-    getPhotos();
-  });
+
+  var min = '',
+      max = '';
+
+  function getPhotos() {
+    // TODO make this configurable
+    var str = $('form').serialize();
+    $.ajax('http://localhost:3000/api/data?' + str)
+      .done(function(data) {
+        if ( console && console.log ) {
+          console.log( data );
+        }
+        var photos = [];
+        $('#result').html('');
+        data.forEach(function(res) {
+          photos.push(res);
+          console.log("URI: " + res.uri);
+          // TODO make this configurable
+          var img = '<img src="http://snippet.demo.marklogic.com:8000/v1/documents?uri=' +
+                    res.uri +
+                    '" style="width: 150px" />';
+          $('#result').append(img);
+        });
+        if (photos.length > 0) {
+          $('#start-date').val(photos[photos.length - 1].properties['$ml.prop']['last-modified']);
+          $('#end-date').val(photos[0].properties['$ml.prop']['last-modified']);
+        }
+        setUpMap(photos);
+      }
+    );
+  }
+  var options = {
+        center: {},
+        scrollwheel: false,
+        zoom: 19
+  };
+
+  function setUpMap(photos) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          options.center.lat = position.coords.latitude;
+          options.center.lng = position.coords.longitude;
+          var map = new google.maps.Map(document.getElementById('map-canvas'), options);
+
+          photos.forEach(function(photo) {
+            if (photo.properties.lat && photo.properties.lon) {
+              var marker = new google.maps.Marker({
+                map: map,
+                position: {
+                  lat: photo.properties.lat,
+                  lng: photo.properties.lon
+                },
+                title: 'Hello World!'
+              });
+            }
+          });
+      });
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+  }
+
+  function loadMap(position) {
+      options.center.lat = position.coords.latitude;
+      options.center.lng = position.coords.longitude;
+      var map = new google.maps.Map(document.getElementById('map-canvas'), options);
+
+      var marker = new google.maps.Marker({
+        map: map,
+        position: myLatLng,
+        title: 'Hello World!'
+      });
+  }
+
+  // Set up filters
+  //$( "#start-date" ).datepicker({"setDate": "10/12/2012"});
+  //$( "#end-date" ).datepicker({"setDate": "4/12/2014"});
+
+  $( "input[type='text']" ).on( "focusout", getPhotos );
+  $( "select" ).on( "change", getPhotos );
   getPhotos();
+
 });
 
 </script>
