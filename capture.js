@@ -81,7 +81,7 @@ daemon.start(function() {
     console.log('gpsd connected');
     listener.watch();
     listener.on('TPV', function (data) {
-      console.log('gps received');
+      //console.log('gps received');
       gps = data;
     });
   });
