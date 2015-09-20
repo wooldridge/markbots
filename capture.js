@@ -6,7 +6,17 @@ var config = require('./config'),
     fs = require('fs')
     raspi = require('raspi-io'),
     five = require('johnny-five'),
-    express = require('express');
+    express = require('express')
+    ifaces = require('os').networkInterfaces();
+
+// Set IP addresses
+var ip = null;
+if (ifaces.wlan0 && ifaces.wlan0[0]) {
+  ip = ifaces.wlan0[0].address.replace(/\./g, '-');
+}
+else if (ifaces.eth1 && ifaces.eth1[0]) {
+  ip = ifaces.eth1[0].address.replace(/\./g, '-');
+}
 
 // Set up EXPRESS
 var app = express(),
@@ -170,18 +180,20 @@ var capturePhoto = function () {
 
 // SAVE PHOTO TO MARKLOGIC
 var savePhoto = function (buffer) {
+  var properties = {
+    cat: 'photo',
+    id: config.bot.id,
+    lat: gps.lat,
+    lon: gps.lon,
+    tr: trigger,
+    ts: dateString,
+    ip: ip
+  };
   db.documents.write({
     uri: dateString + '.jpg',
     content: buffer,
     collections: ['photos'],
-    properties: {
-      cat: 'photo',
-      id: config.bot.id,
-      lat: gps.lat,
-      lon: gps.lon,
-      tr: trigger,
-      ts: dateString
-    }
+    properties: properties
   }).result(
     function(response) {
       console.log('Loaded the following documents:');
