@@ -38,8 +38,23 @@ var db = marklogic.createDatabaseClient(config.marklogic);
 // If GPS not working:
 //   sudo killall gpsd
 //   sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
-var daemon = new gpsd.Daemon();
 var gps = {};
+var killall = spawn('sudo', ['killall', 'gpsd']);
+killall.on('close', function (code) {
+  console.log('kill existing gps, child process exited with code: ' + code);
+  // sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+  var gpsd = spawn('sudo', ['gpsd', '/dev/ttyUSB0', '-F', '/var/run/gpsd.sock']);
+  gpsd.on('close', function (code) {
+    console.log('start gps, child process exited with code: ' + code);
+  });
+  gpsd.on('error', function (err) {
+    console.log('start gps, failed to start child process: ' + err);
+  });
+});
+killall.on('error', function (err) {
+  console.log('kill existing gps, failed to start child process: ' + err);
+});
+var daemon = new gpsd.Daemon();
 
 // CAMERA events
 camera.on('start', function(err, timestamp){
@@ -61,92 +76,90 @@ camera.on('exit', function(timestamp){
 
 // GPS events
 daemon.start(function() {
-    var listener = new gpsd.Listener({parse: true});
-    listener.connect(function() {
-        console.log('gpsd connected');
-        listener.watch();
-        listener.on('TPV', function (data) {
-	  console.log('gps received');
-          gps = data;
-        });
+  var listener = new gpsd.Listener({parse: true});
+  listener.connect(function() {
+    console.log('gpsd connected');
+    listener.watch();
+    listener.on('TPV', function (data) {
+      console.log('gps received');
+      gps = data;
     });
+  });
 });
 
 // MOTION events
 board.on('ready', function () {
-    console.log('board is ready');
+  console.log('board is ready');
 
-    var motion = new five.Motion('P1-7');
+  var motion = new five.Motion('P1-7');
 
-    motion.on('calibrated', function () {
-      console.log('calibrated');
-    });
+  motion.on('calibrated', function () {
+    console.log('calibrated');
+  });
 
-    motion.on('motionstart', function () {
-      console.log('motionstart');
-      console.log('motionFlag: ' + motionFlag);
-      if (motionFlag === true) {
-        trigger = 'motion';
-        capturePhoto();
-      }
-    });
+  motion.on('motionstart', function () {
+    console.log('motionstart');
+    console.log('motionFlag: ' + motionFlag);
+    if (motionFlag === true) {
+      trigger = 'motion';
+      capturePhoto();
+    }
+  });
 
-    motion.on('motionend', function () {
-      console.log('motionend');
-
-    });
+  motion.on('motionend', function () {
+    console.log('motionend');
+  });
 
 });
 
 // SOCKET.IO events
 io.sockets.on('connection', function (socket) {
-    socket.emit('message', { message: 'socket.io connection' });
-    socket.on('getPhoto', function (data) {
-        console.log('photo event');
-        trigger = 'socket';
-        capturePhoto();
+  socket.emit('message', { message: 'socket.io connection' });
+  socket.on('getPhoto', function (data) {
+    console.log('photo event');
+    trigger = 'socket';
+    capturePhoto();
+  });
+  socket.on('getGps', function (data) {
+    console.log('gps event');
+    io.sockets.emit('gps', {coords: 'lat: ' + gps.lat + ' lon: ' + gps.lon});
+  });
+  socket.on('toggleMotion', function (data) {
+    console.log('toggle motion event');
+    motionFlag = !motionFlag;
+    io.sockets.emit('motion', {value: motionFlag});
+  });
+  socket.on('resetGps', function (data) {
+    console.log('gps reset');
+    // sudo killall gpsd
+    var killall = spawn('sudo', ['killall', 'gpsd']);
+  	killall.on('close', function (code) {
+      console.log('child process exited with code: ' + code);
+      // sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+      var gpsd = spawn('sudo', ['gpsd', '/dev/ttyUSB0', '-F', '/var/run/gpsd.sock']);
+  	  gpsd.on('close', function (code) {
+        console.log('child process exited with code: ' + code);
+      });
+  	  gpsd.on('error', function (err) {
+        console.log('failed to start child process: ' + err);
+      });
     });
-    socket.on('getGps', function (data) {
-        console.log('gps event');
-        io.sockets.emit('gps', {coords: 'lat: ' + gps.lat + ' lon: ' + gps.lon});
+  	killall.on('error', function (err) {
+      console.log('failed to start child process: ' + err);
     });
-    socket.on('toggleMotion', function (data) {
-        console.log('toggle motion event');
-        motionFlag = !motionFlag;
-        io.sockets.emit('motion', {value: motionFlag});
-    });
-    socket.on('resetGps', function (data) {
-        console.log('gps reset');
-        // sudo killall gpsd
-        var killall = spawn('sudo', ['killall', 'gpsd']);
-	killall.on('close', function (code) {
-          console.log('child process exited with code: ' + code);
-          // sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
-          var gpsd = spawn('sudo', ['gpsd', '/dev/ttyUSB0', '-F', '/var/run/gpsd.sock']);
-	  gpsd.on('close', function (code) {
-            console.log('child process exited with code: ' + code);
-          });
-	  gpsd.on('error', function (err) {
-            console.log('failed to start child process: ' + err);
-          });
-        });
-	killall.on('error', function (err) {
-          console.log('failed to start child process: ' + err);
-        });
-
-    });
+  });
 });
 
 // CAPTURE PHOTO
 var capturePhoto = function () {
   var m = new Date();
   dateString =
-      m.getFullYear() +'-'+
-      ('0' + (m.getMonth()+1)).slice(-2) +'-'+
-      ('0' + m.getDate()).slice(-2) + '_' +
-      ('0' + m.getHours()).slice(-2) + '-' +
-      ('0' + m.getMinutes()).slice(-2) + '-' +
-      ('0' + m.getSeconds()).slice(-2);
+    m.getFullYear() +'-'+
+    ('0' + (m.getMonth()+1)).slice(-2) +'-'+
+    ('0' + m.getDate()).slice(-2) + '_' +
+    ('0' + m.getHours()).slice(-2) + '-' +
+    ('0' + m.getMinutes()).slice(-2) + '-' +
+    ('0' + m.getSeconds()).slice(-2);
 
   output = './photos/' + dateString + '.jpg';
 
