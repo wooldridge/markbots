@@ -47,6 +47,7 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script src="//maps.googleapis.com/maps/api/js?AIzaSyDUsZCP04vN4oxSQBcHmz1YGbTq8RTMEvw"></script>
 
+<script src="config.js"></script>
 <script src="Bot.js"></script>
 <script src="Photo.js"></script>
 
@@ -63,7 +64,7 @@ $(document).ready(function () {
     var str = $('form').serialize();
     photos = [];
     bots = {};
-    $.ajax('http://localhost:3000/api/data?' + str)
+    $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/data?' + str)
       .done(function(data) {
         if ( console && console.log ) {
           console.log( data );

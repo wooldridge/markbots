@@ -4,7 +4,7 @@ var config = require('./config'),
 
 // Set up EXPRESS
 var app = express(),
-    port = 3000,
+    port = config.dashboard.port,
     router = express.Router();
 app.use(express.static(__dirname + '/'));
 
