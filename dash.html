@@ -31,10 +31,15 @@
         <option value="10">10</option>
         <option value="20">20</option>
         <option value="40">40</option>
+        <option value="80">80</option>
+        <option value="320">320</option>
       </select>
     </div>
   </form>
 </div>
+
+<table id="summary">
+</table>
 
 <div id="result" style="width: 600px;"></div>
 
@@ -42,29 +47,47 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script src="//maps.googleapis.com/maps/api/js?AIzaSyDUsZCP04vN4oxSQBcHmz1YGbTq8RTMEvw"></script>
 
+<script src="Bot.js"></script>
+<script src="Photo.js"></script>
+
 <script>
 
 $(document).ready(function () {
 
   var min = '',
-      max = '';
+      max = ''
+      botsToColors = {};
 
   function getPhotos() {
     // TODO make this configurable
     var str = $('form').serialize();
+    photos = [];
+    bots = {};
     $.ajax('http://localhost:3000/api/data?' + str)
       .done(function(data) {
         if ( console && console.log ) {
           console.log( data );
         }
-        var photos = [];
         $('#result').html('');
         data.forEach(function(res) {
-          photos.push(res);
-          console.log("URI: " + res.uri);
+          var p = new APP.Photo(res);
+          // if bot ID not recognized, create a new one in bots obj
+          var botId = p.getBotId();
+          if (!bots[botId]) {
+            var b = new APP.Bot(res);
+            b.addPhoto(p);
+            bots[botId] = b;
+          }
+          // else add photo to existing bot obj
+          else {
+            bots[botId].addPhoto(p);
+          }
+          p.setBot(bots[botId]);
+          photos.push(p);
+          console.log("URI: " + p.getUri());
           // TODO make this configurable
           var img = '<img src="http://snippet.demo.marklogic.com:8000/v1/documents?uri=' +
-                    res.uri +
+                    p.getUri() +
                     '" style="width: 150px" />';
           $('#result').append(img);
         });
@@ -73,6 +96,16 @@ $(document).ready(function () {
         //   $('#start-date').val(photos[photos.length - 1].properties['$ml.prop']['last-modified']);
         //   $('#end-date').val(photos[0].properties['$ml.prop']['last-modified']);
         // }
+
+        // Set up table
+        for (var prop in bots) {
+          $('#summary').html('<tr><td>Bot</td><td>Lat</td><td>Lon</td><td>Actions</td></tr>');
+          b = bots[prop];
+          var coords = b.getCoords();
+          var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /></td></tr>';
+          $('#summary').append(row);
+        }
+
         setUpMap(photos);
       }
     );
@@ -91,14 +124,16 @@ $(document).ready(function () {
           var map = new google.maps.Map(document.getElementById('map-canvas'), options);
 
           photos.forEach(function(photo) {
-            if (photo.properties.lat && photo.properties.lon) {
+            var coords = photo.getCoords();
+            if (coords.lat && coords.lon) {
               var marker = new google.maps.Marker({
                 map: map,
                 position: {
-                  lat: photo.properties.lat,
-                  lng: photo.properties.lon
+                  lat: coords.lat,
+                  lng: coords.lon
                 },
-                title: 'Hello World!'
+                title: photo.getUri(),
+                icon: 'images/'+photo.getBotId()+'.png'
               });
             }
           });
@@ -106,18 +141,6 @@ $(document).ready(function () {
     } else {
         console.log("Geolocation is not supported by this browser.");
     }
-  }
-
-  function loadMap(position) {
-      options.center.lat = position.coords.latitude;
-      options.center.lng = position.coords.longitude;
-      var map = new google.maps.Map(document.getElementById('map-canvas'), options);
-
-      var marker = new google.maps.Marker({
-        map: map,
-        position: myLatLng,
-        title: 'Hello World!'
-      });
   }
 
   // Set up filters
