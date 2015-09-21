@@ -99,10 +99,32 @@ sudo npm install
 
 (Takes a while, 15 minutes)
 
-
-TEST MARKBOT
+14. TEST MARKBOT
 
 cd markbots
 sudo chmod 777 *.js
 sudo node capture
 
+15. Tether Bot to iPhone:
+
+http://www.daveconroy.com/how-to-tether-your-raspberry-pi-with-your-iphone-5/
+
+Install the following:
+
+sudo apt-get install gvfs ipheth-utils
+sudo apt-get install libimobiledevice-utils gvfs-backends gvfs-bin gvfs-fuse
+
+Edit:
+
+sudo nano /etc/network/interfaces
+
+to add:
+
+allow-hotplug eth1
+iface eth1 inet dhcp
+
+Confirm before and after tethering with:
+
+ifconfig -s
+
+I was successful tethering with GUI, starting capture, and then disconnecting monitor, kyboard, and mouse. I could successfully connect to the demo server via the iPhone (without Wifi).
