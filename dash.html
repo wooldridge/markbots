@@ -94,7 +94,7 @@ $(document).ready(function () {
           var img = '<a href="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
                     p.getUri() + '" data-lightbox="markbot" data-title="' + p.getLastMod() + '">';
           img += '<img src="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
-                    p.getUri() + '" style="width: 150px" />';
+                    p.getUri() + '" id="'+p.getUri()+'" style="width: 150px" />';
           img += '</a>';
           $('#result').append(img);
         });
@@ -139,6 +139,7 @@ $(document).ready(function () {
     options.center.lng = firstCoords.lon;
     var map = new google.maps.Map(document.getElementById('map-canvas'), options);
 
+    coordsForLine = [];
     photos.forEach(function(photo) {
       var coords = photo.getCoords();
       if (coords.lat && coords.lon) {
@@ -151,8 +152,23 @@ $(document).ready(function () {
           title: photo.getUri(),
           icon: 'images/'+photo.getBotId()+'.png'
         });
+        coordsForLine.push({lat: coords.lat, lng: coords.lon});
+        // Open lightbox image on marker click
+        google.maps.event.addListener(marker, 'click', function() {
+          actuateLink(document.getElementById(photo.getUri()));
+        });
       }
     });
+
+    var photoPath = new google.maps.Polyline({
+      path: coordsForLine,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    photoPath.setMap(map);
   }
 
   // Set up filters
@@ -162,6 +178,32 @@ $(document).ready(function () {
   $( "input[type='text']" ).on( "focusout", getPhotos );
   $( "select" ).on( "change", getPhotos );
   getPhotos();
+
+  // http://blog.stchur.com/2010/01/15/programmatically-clicking-a-link-in-javascript/
+  // To activat lightbox link on marker click. Not sure if all browsers support this.
+  function actuateLink(link) {
+     var allowDefaultAction = true;
+     if (link.click) {
+        link.click();
+        return;
+     }
+     else if (document.createEvent) {
+        var e = document.createEvent('MouseEvents');
+        e.initEvent(
+           'click'     // event type
+           ,true      // can bubble?
+           ,true      // cancelable?
+        );
+        allowDefaultAction = link.dispatchEvent(e);
+     }
+
+     if (allowDefaultAction) {
+        var f = document.createElement('form');
+        f.action = link.href;
+        document.body.appendChild(f);
+        f.submit();
+     }
+  }
 
 });
 
