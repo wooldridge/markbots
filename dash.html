@@ -59,8 +59,9 @@
 $(document).ready(function () {
 
   var min = '',
-      max = ''
-      botsToColors = {};
+      max = '',
+      botsToColors = {},
+      userCoords = {};
 
   function getPhotos() {
     // TODO make this configurable
@@ -112,41 +113,46 @@ $(document).ready(function () {
           $('#summary').append(row);
         }
 
-        setUpMap(photos);
+        setUpMap(bots, photos);
       }
     );
   }
   var options = {
         center: {},
         scrollwheel: false,
-        zoom: 19
+        zoom: 18
   };
 
-  function setUpMap(photos) {
+  function setUpMap(bots, photos) {
+    // Get user GPS coords
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-          options.center.lat = position.coords.latitude;
-          options.center.lng = position.coords.longitude;
-          var map = new google.maps.Map(document.getElementById('map-canvas'), options);
-
-          photos.forEach(function(photo) {
-            var coords = photo.getCoords();
-            if (coords.lat && coords.lon) {
-              var marker = new google.maps.Marker({
-                map: map,
-                position: {
-                  lat: coords.lat,
-                  lng: coords.lon
-                },
-                title: photo.getUri(),
-                icon: 'images/'+photo.getBotId()+'.png'
-              });
-            }
-          });
+          // Store coords for possible future use
+          userCoords.lat = position.coords.latitude;
+          userCoords.lon = position.coords.longitude;
       });
     } else {
         console.log("Geolocation is not supported by this browser.");
     }
+    firstCoords = photos[0].getCoords();
+    options.center.lat = firstCoords.lat;
+    options.center.lng = firstCoords.lon;
+    var map = new google.maps.Map(document.getElementById('map-canvas'), options);
+
+    photos.forEach(function(photo) {
+      var coords = photo.getCoords();
+      if (coords.lat && coords.lon) {
+        var marker = new google.maps.Marker({
+          map: map,
+          position: {
+            lat: coords.lat,
+            lng: coords.lon
+          },
+          title: photo.getUri(),
+          icon: 'images/'+photo.getBotId()+'.png'
+        });
+      }
+    });
   }
 
   // Set up filters
