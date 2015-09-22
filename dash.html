@@ -2,6 +2,8 @@
 
 <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"> -->
 
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.1/css/lightbox.min.css">
+
 <div id="map-canvas" style="width: 600px; height: 300px"></div>
 
 <div style="width: 600px; height: 40px;">
@@ -46,6 +48,7 @@
 <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script src="//maps.googleapis.com/maps/api/js?AIzaSyDUsZCP04vN4oxSQBcHmz1YGbTq8RTMEvw"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.1/js/lightbox.min.js"></script>
 
 <script src="config.js"></script>
 <script src="Bot.js"></script>
@@ -87,9 +90,11 @@ $(document).ready(function () {
           photos.push(p);
           console.log("URI: " + p.getUri());
           // TODO make this configurable
-          var img = '<img src="http://snippet.demo.marklogic.com:8000/v1/documents?uri=' +
-                    p.getUri() +
-                    '" style="width: 150px" />';
+          var img = '<a href="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
+                    p.getUri() + '" data-lightbox="markbot" data-title="' + p.getLastMod() + '">';
+          img += '<img src="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
+                    p.getUri() + '" style="width: 150px" />';
+          img += '</a>';
           $('#result').append(img);
         });
 

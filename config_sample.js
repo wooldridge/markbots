@@ -16,7 +16,7 @@ config.raspicam = {
 // Where is MarkLogic running?
 config.marklogic = {
   host: 'SERVER.EXAMPLE.COM',
-  port:	'8000',
+  port:	'8087',
   user:	'USER',
   password: 'PASSWORD',
   authType: 'digest'
@@ -25,7 +25,7 @@ config.marklogic = {
 // Where is the dashboard running?
 config.dashboard = {
   host: 'SERVER.EXAMPLE.COM',
-  port: '3000'
+  port: '8088'
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {

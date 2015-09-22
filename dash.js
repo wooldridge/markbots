@@ -87,6 +87,19 @@ router.get('/data', function(req, res, next) {
     });
 });
 
+// GET photo
+router.get('/photo', function(req, res, next) {
+  // params from URL
+  var uri = req.query.uri ? req.query.uri : '';
+  db.documents.read(uri)
+  .result(function(documents) {
+      res.type('application/jpeg');
+      res.end(documents[0].content, 'binary');
+      }, function(error) {
+        console.dir(error);
+    });
+});
+
 // Only requests to /api/ will be sent to router.
 app.use('/api', router);
 
