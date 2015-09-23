@@ -1,7 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="UTF-8">
 
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
 
 <input type="button" value="get photo" id="getPhoto" />
 <input type="button" value="get location" id="getGps" />
@@ -10,6 +13,9 @@
 <br />
 <div id="message"></div>
 <img id="latest" src="" />
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
 
@@ -50,4 +56,5 @@ socket.on('motion', function (data) {
 
 </script>
 
+</body>
 </html>
