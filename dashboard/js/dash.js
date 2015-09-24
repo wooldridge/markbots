@@ -79,9 +79,9 @@ $(document).ready(function () {
           botsJson.push(b.getAsJson());
         });
 
-        botsJson = JSON.stringify(botsJson);
+        json = {bots: botsJson};
 
-        //resultsPlaceholder.append(tableTemplate(botsJson));
+        resultsPlaceholder.append(tableTemplate(json));
 
         $("input[value='capture']").click(function () {
           console.dir(this);
@@ -184,23 +184,9 @@ Handlebars.registerHelper("everyOther", function (index, amount, scope) {
   var source = $("#summary-table-template").html();
   var tableTemplate = Handlebars.compile(source);
   var resultsPlaceholder = $("#summary-table");
-  var json = { "bots": [{"id":"markbot2","ip":"10.0.0.21","lastMod":"2015-09-24T13:29:36.000Z","lastCap":"2015-09-24T10:04:48.000Z","mot":null},{"id":"markbot1","lat":null,"lon":null,"ip":"10.0.0.8","lastMod":"2015-09-24T13:28:45.000Z","lastCap":"2015-09-24T10:05:35.000Z","mot":null}]};
-
-var data = {
-    bots: [ {
-        id: "markbot2",
-        ip: "10.0.0.21"
-    }, {
-        id: "markbot1",
-        ip: "10.0.0.8"
-    }, {
-        id: "markbot3",
-        ip: "10.0.0.1"
-    } ]
-};
 
 
-  resultsPlaceholder.append(tableTemplate(data));
+  //resultsPlaceholder.append(tableTemplate(data));
 
   getBots();
 
