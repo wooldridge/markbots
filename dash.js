@@ -166,6 +166,21 @@ router.get('/bot', function(req, res, next) {
     });
 });
 
+// DELETE document
+router.get('/delete', function(req, res, next) {
+  // params from URL
+  var id = req.query.id ? req.query.id : '',
+      uri = id;
+  db.documents.remove(uri)
+  .result(function(document) {
+      res.type('application/json');
+      console.dir(document);
+      res.json(document);
+      }, function(error) {
+        console.dir(error);
+    });
+});
+
 // Only requests to /api/ will be sent to router.
 app.use('/api', router);
 
