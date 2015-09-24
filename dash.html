@@ -86,6 +86,12 @@ $(document).ready(function () {
           console.log("Bot ID: " + b.getId());
         });
 
+        bots.sort(function (a, b) {
+          var aName = a.getId().toLowerCase();
+          var bName = b.getId().toLowerCase();
+          return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+        });
+
         getPhotos(bots);
       }
     );
