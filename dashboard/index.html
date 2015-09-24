@@ -80,6 +80,8 @@
                     <th colspan="3">Bot Name</th>
                     <th class="text-center">Latitude</th>
                     <th class="text-center">Longitude</th>
+                    <th class="text-center">Last Activity</th>
+                    <th class="text-center">Online</th>
                     <th class="text-center">Motion</th>
                   </tr>
                 {{#bots}}
@@ -91,9 +93,15 @@
                   <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td>
                   <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
                   <td class="summary-name">{{id}}</td>
-                  <td class="text-center">{{ip}}</td>
+                  <td class="text-center">{{lat}}</td>
                   <td class="text-center">{{lon}}</td>
-                  <td class="summary-motion text-center">{{motion}}</td>
+                  <td class="text-center">{{dateFormat lastMod format="YYYY-MM-DD HH:mm:ss"}}</td>
+                    {{#if status}}
+                      <td class="text-center">Yes</td>
+                    {{else}}
+                      <td class="text-center">No</td>
+                    {{/if}}
+                  <td class="summary-motion text-center">{{mot}}</td>
                 </tr>
                 </tbody>
               {{/bots}}
@@ -191,6 +199,7 @@
   <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="/bower_components/bootstrap-3-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
   <script src="/bower_components/handlebars/handlebars.min.js"></script>
+  <script src="/bower_components/moment/min/moment.min.js"></script>
   <script src="//maps.googleapis.com/maps/api/js?AIzaSyDUsZCP04vN4oxSQBcHmz1YGbTq8RTMEvw"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="assets/js/_global.js"></script>

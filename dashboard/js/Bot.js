@@ -148,6 +148,7 @@ APP.Bot = function (data) {
       ip: ip,
       lastMod: lastMod,
       lastCap: lastCap,
+      status: isOnline(),
       mot: mot
     }
     return json;

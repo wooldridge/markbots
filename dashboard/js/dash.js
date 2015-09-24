@@ -5,8 +5,7 @@ $(document).ready(function () {
       botsToColors = {},
       userCoords = {},
       bots = [],
-      botsMap = {},
-      tableTemplate;
+      botsMap = {};
 
   function getBots() {
     // TODO make this configurable
@@ -81,7 +80,9 @@ $(document).ready(function () {
 
         json = {bots: botsJson};
 
-        resultsPlaceholder.append(tableTemplate(json));
+        var source = $("#summary-table-template").html();
+        var template = Handlebars.compile(source);
+        $("#summary-table").append(template(json));
 
         $("input[value='capture']").click(function () {
           console.dir(this);
@@ -174,6 +175,20 @@ $(document).ready(function () {
   var socket = io.connect('http://' + config.dashboard.host +
                         ':' + config.dashboard.port);
 
+//  https://gist.github.com/elidupuis/1468937
+//  format an ISO date using Moment.js
+//  http://momentjs.com/
+//  moment syntax example: moment(Date("2011-07-18T15:50:52")).format("MMMM YYYY")
+//  usage: {{dateFormat creation_date format="MMMM YYYY"}}
+Handlebars.registerHelper('dateFormat', function(context, block) {
+  if (window.moment) {
+    var f = block.hash.format || "MMM Do, YYYY";
+    return moment(Date(context)).format(f);
+  }else{
+    return context;   //  moment plugin not available. return data as is.
+  };
+});
+
 Handlebars.registerHelper("everyOther", function (index, amount, scope) {
     if ( ++index % amount)
         return scope.inverse(this);
@@ -181,12 +196,9 @@ Handlebars.registerHelper("everyOther", function (index, amount, scope) {
         return scope.fn(this);
 });
 
-  var source = $("#summary-table-template").html();
-  var tableTemplate = Handlebars.compile(source);
-  var resultsPlaceholder = $("#summary-table");
-
-
-  //resultsPlaceholder.append(tableTemplate(data));
+  // var source = $("#summary-table-template").html();
+  // var tableTemplate = Handlebars.compile(source);
+  // var resultsPlaceholder = $("#summary-table");
 
   getBots();
 
