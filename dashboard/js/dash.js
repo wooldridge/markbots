@@ -57,8 +57,10 @@ $(document).ready(function () {
           // TODO make this configurable
           var img = '<a href="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
                     p.getUri() + '" data-lightbox="markbot" data-title="' + p.getLastMod() + '">';
+          img += '<div class="image-wrapper col-xs-2">';
           img += '<img src="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
-                    p.getUri() + '" id="'+p.getUri()+'" style="width: 150px" />';
+                    p.getUri() + '" id="'+p.getUri()+'" class="img-thumbnail" />';
+          img += '</div>';
           img += '</a>';
           $('#result').append(img);
         });
@@ -101,7 +103,7 @@ $(document).ready(function () {
   var options = {
         center: {},
         scrollwheel: false,
-        zoom: 18
+        zoom: 19
   };
 
   function setUpMap(bots, photos) {
