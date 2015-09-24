@@ -40,7 +40,7 @@ APP.Photo = function (data) {
   tr = data.properties.tr || '';
   botId = data.properties.id || '';
   ts = data.properties.ts || '';
-  ip = data.properties.ip.replace(/-/g, '.') || '';
+  ip = data.properties.ip ? data.properties.ip.replace(/-/g, '.') : '';
   lastMod = data.properties['$ml.prop']['last-modified'] || '';
 
  /**
