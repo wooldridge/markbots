@@ -15,7 +15,9 @@ APP.Bot = function (data) {
       ip,
       lastMod,
       photos,
+      lastCap,
       color,
+      mot,
 
       // methods
       getId,
@@ -23,9 +25,12 @@ APP.Bot = function (data) {
       getIp,
       getLastMod,
       getPhotos,
+      getLastCap,
+      isOnline,
       addPhoto,
       setColor,
-      getColor;
+      getColor,
+      getMotion;
 
   // initialize properties
   data = data || {};
@@ -40,6 +45,8 @@ APP.Bot = function (data) {
   } else {
     lastMod = '';
   }
+  lastCap = ''; // is set based on added photos
+  mot = data.properties.mot || null;
   photos = [];
 
  /**
@@ -78,19 +85,32 @@ APP.Bot = function (data) {
   };
 
  /**
+  * Get last-captured timestamp.
+  */
+  getLastCap = function () {
+    return lastCap;
+  };
+
+ /**
+  * Get last-captured timestamp.
+  */
+  isOnline = function () {
+    var now = new Date();
+    var currTime  = now.getTime() - (now.getTimezoneOffset() * 60000);
+    var lastMod2 = lastMod.getTime() - (lastMod.getTimezoneOffset() * 60000);
+    var threshold = 120000;
+    return currTime < (lastMod2 + threshold);
+  };
+
+ /**
   * Add a photo taken by bot.
   * @param photo A Photo object.
   */
   addPhoto = function (photo) {
-    // If photo added is more recent, use as basis for properties
     var photoLastMod = photo.getLastMod().getTime();
-    if (lastMod === '' || lastMod.getTime() < photoLastMod) {
-      var photoCoords = photo.getCoords();
-      lat = photoCoords.lat || lat;
-      lon = photoCoords.lon || lon;
-      ts = photo.getTs() || ts;
-      ip = photo.getIp() || ip;
-      lastMod = photo.getLastMod() || lastMod;
+    // If photo added is most recent photo, set last-captured property
+    if (lastCap === '' || lastCap.getTime() < photoLastMod) {
+      lastCap = photo.getLastMod() || lastCap;
     }
     photos.push(photo);
   };
@@ -109,6 +129,13 @@ APP.Bot = function (data) {
     return color;
   };
 
+ /**
+  * Get the motion status.
+  */
+  getMotion = function () {
+    return mot;
+  };
+
   // Public API
   return {
     getId: getId,
@@ -116,9 +143,12 @@ APP.Bot = function (data) {
     getIp: getIp,
     getLastMod: getLastMod,
     getPhotos: getPhotos,
+    getLastCap: getLastCap,
+    isOnline: isOnline,
     addPhoto: addPhoto,
     setColor: setColor,
-    getColor: getColor
+    getColor: getColor,
+    getMotion: getMotion
   };
 
 };
