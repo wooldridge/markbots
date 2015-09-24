@@ -108,3 +108,12 @@ var server = app.listen(port, function () {
   var port = server.address().port;
   console.log('Example app listening at http://%s:%s', host, port);
 });
+
+var io = require('socket.io').listen(server);
+io.sockets.on('connection', function (socket) {
+  console.log('connection established');
+  socket.on('captureReqest', function (data) {
+    console.dir(data);
+    io.sockets.emit('capture', data);
+  });
+});

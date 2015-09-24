@@ -24,9 +24,18 @@ var app = express(),
 app.use(express.static(__dirname + '/'));
 
 // Set up SOCKET.IO
-var io = require('socket.io').listen(app.listen(port, function () {
-    console.log('listening on ' + port);
-}));
+// var io = require('socket.io').listen(app.listen(port, function () {
+//     console.log('listening on ' + port);
+// }));
+var socket = require('socket.io-client')(
+  'http://'+config.dashboard.host+':'+config.dashboard.port
+);
+socket.on('connect', function(){
+  console.log('connected');
+});
+socket.on('capture', function(data){
+  console.log('capture received');
+});
 
 // Set up MOTION
 var motionFlag = true;
@@ -122,42 +131,42 @@ board.on('ready', function () {
 });
 
 // SOCKET.IO events
-io.sockets.on('connection', function (socket) {
-  socket.emit('message', { message: 'socket.io connection' });
-  socket.on('getPhoto', function (data) {
-    console.log('photo event');
-    trigger = 'socket';
-    capturePhoto();
-  });
-  socket.on('getGps', function (data) {
-    console.log('gps event');
-    io.sockets.emit('gps', {coords: 'lat: ' + gps.lat + ' lon: ' + gps.lon});
-  });
-  socket.on('toggleMotion', function (data) {
-    console.log('toggle motion event');
-    motionFlag = !motionFlag;
-    io.sockets.emit('motion', {value: motionFlag});
-  });
-  socket.on('resetGps', function (data) {
-    console.log('gps reset');
-    // sudo killall gpsd
-    var killall = spawn('sudo', ['killall', 'gpsd']);
-  	killall.on('close', function (code) {
-      console.log('child process exited with code: ' + code);
-      // sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
-      var gpsd = spawn('sudo', ['gpsd', '/dev/ttyUSB0', '-F', '/var/run/gpsd.sock']);
-  	  gpsd.on('close', function (code) {
-        console.log('child process exited with code: ' + code);
-      });
-  	  gpsd.on('error', function (err) {
-        console.log('failed to start child process: ' + err);
-      });
-    });
-  	killall.on('error', function (err) {
-      console.log('failed to start child process: ' + err);
-    });
-  });
-});
+// io.sockets.on('connection', function (socket) {
+//   socket.emit('message', { message: 'socket.io connection' });
+//   socket.on('getPhoto', function (data) {
+//     console.log('photo event');
+//     trigger = 'socket';
+//     capturePhoto();
+//   });
+//   socket.on('getGps', function (data) {
+//     console.log('gps event');
+//     io.sockets.emit('gps', {coords: 'lat: ' + gps.lat + ' lon: ' + gps.lon});
+//   });
+//   socket.on('toggleMotion', function (data) {
+//     console.log('toggle motion event');
+//     motionFlag = !motionFlag;
+//     io.sockets.emit('motion', {value: motionFlag});
+//   });
+//   socket.on('resetGps', function (data) {
+//     console.log('gps reset');
+//     // sudo killall gpsd
+//     var killall = spawn('sudo', ['killall', 'gpsd']);
+//   	killall.on('close', function (code) {
+//       console.log('child process exited with code: ' + code);
+//       // sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+//       var gpsd = spawn('sudo', ['gpsd', '/dev/ttyUSB0', '-F', '/var/run/gpsd.sock']);
+//   	  gpsd.on('close', function (code) {
+//         console.log('child process exited with code: ' + code);
+//       });
+//   	  gpsd.on('error', function (err) {
+//         console.log('failed to start child process: ' + err);
+//       });
+//     });
+//   	killall.on('error', function (err) {
+//       console.log('failed to start child process: ' + err);
+//     });
+//   });
+// });
 
 // CAPTURE PHOTO
 var capturePhoto = function () {

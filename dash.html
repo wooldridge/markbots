@@ -55,6 +55,8 @@
 <script src="//maps.googleapis.com/maps/api/js?AIzaSyDUsZCP04vN4oxSQBcHmz1YGbTq8RTMEvw"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.1/js/lightbox.min.js"></script>
 
+<script src="/socket.io/socket.io.js"></script>
+
 <script src="config.js"></script>
 <script src="Bot.js"></script>
 <script src="Photo.js"></script>
@@ -117,6 +119,12 @@ $(document).ready(function () {
           var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /></td></tr>';
           $('#summary').append(row);
         }
+
+
+        $("input[value='capture']").click(function () {
+          console.dir(this);
+          socket.emit('captureReqest', {id: this.name});
+        });
 
         setUpMap(bots, photos);
       }
@@ -182,7 +190,13 @@ $(document).ready(function () {
 
   $( "input[type='text']" ).on( "focusout", getPhotos );
   $( "select" ).on( "change", getPhotos );
+
+  // Connect to dashboard socket
+  var socket = io.connect('http://' + config.dashboard.host +
+                        ':' + config.dashboard.port);
+
   getPhotos();
+
 
   // http://blog.stchur.com/2010/01/15/programmatically-clicking-a-link-in-javascript/
   // To activat lightbox link on marker click. Not sure if all browsers support this.
