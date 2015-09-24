@@ -44,7 +44,7 @@ socket.on('capture', function(data){
 socket.on('motion', function(data){
   console.log('motion received');
   console.dir(data);
-  // TODO handle motion event
+  motionFlag = !motionFlag;
 });
 
 // Set up MOTION
@@ -248,7 +248,8 @@ var saveBot = function () {
     lat: gps.lat,
     lon: gps.lon,
     ts: dateString,
-    ip: ip
+    ip: ip,
+    mot: motionFlag
   };
   db.documents.write({
     uri: config.bot.id + '.json',

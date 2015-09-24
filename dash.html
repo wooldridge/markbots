@@ -123,10 +123,10 @@ $(document).ready(function () {
 
         // Set up table
         for (var prop in bots) {
-          $('#summary').html('<tr><td>Bot</td><td>Lat</td><td>Lon</td><td>Last Activity</td><td>Actions</td></tr>');
+          $('#summary').html('<tr><td>Bot</td><td>Lat</td><td>Lon</td><td>Last Activity</td><td>Status</td><td>Motion</td><td>Actions</td></tr>');
           b = bots[prop];
           var coords = b.getCoords();
-          var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td>'+b.getLastMod()+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /> <input type="button" name="'+b.getId()+'" value="motion" /></td></tr>';
+          var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td>'+b.getLastCap()+'</td><td>'+(b.isOnline() ? 'Online' : 'Offline')+'</td><td>'+(b.getMotion() ? 'On' : 'Off')+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /> <input type="button" name="'+b.getId()+'" value="motion" /></td></tr>';
           $('#summary').append(row);
         }
 
