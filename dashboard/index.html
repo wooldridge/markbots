@@ -5,12 +5,12 @@
   <meta charset="UTF-8" />
   <title>MarkBot</title>
   <link rel="stylesheet" href="css/style.css" />
-  <script src="js/app.min.js" type="text/javascript" charset="UTF-8" ></script>
+
 </head>
 <body>
 
   <header style="border-bottom:1px solid #ccc;">
-    <div class="logo" style="padding:1.4rem;">  
+    <div class="logo" style="padding:1.4rem;">
         <a href="/">
           <img src="images/markbot-logo.svg" alt="MarkBot" />
         </a>
@@ -25,7 +25,7 @@
       <div id="controls" class="col-xs-12">
 
         <div class="row">
-          
+
           <div class="input-group-wrapper col-sm-4">
             <div class="input-daterange input-group" id="datepicker">
               <input type="text" class="input-sm form-control" name="start" placeholder="Start Date" />
@@ -74,38 +74,34 @@
 
         <h2>Bot Summary</h2>
 
-        <table id="summary-table" class="table table-striped table-condensed table-hover">
-          <tr>
-            <th colspan="3">Bot Name</th>
-            <th class="text-center">Latitude</th>
-            <th class="text-center">Longitude</th>
-            <th class="text-center">Motion</th>
-          </tr> 
-          <tr class="summary-row summary-active">
-            <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td>
-            <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
-            <td class="summary-name">M1</td>
-            <td class="text-center">38.21</td>
-            <td class="text-center">-122.331</td>
-            <td class="summary-motion text-center">On</td>
-          </tr>
-          <tr class="summary-row">
-            <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td>
-            <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
-            <td class="summary-name">M2</td>
-            <td class="text-center">38.21</td>
-            <td class="text-center">-122.331</td>
-            <td class="summary-motion text-center">Off</td>
-          </tr>
-          <tr class="summary-row summary-active">
-            <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td>
-            <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
-            <td class="summary-name">M3</td>
-            <td class="text-center">38.21</td>
-            <td class="text-center">-122.331</td>
-            <td class="summary-motion text-center">On</td>
-          </tr>
-        </table>
+            <script id="summary-table-template" type="text/x-handlebars-template">
+              {{#bots}}
+                <tbody>
+                {{#everyOther @index 2}}
+                    <tr class="summary-row summary-active">
+                {{else}}
+                    <tr class="summary-row">
+                {{/everyOther}}
+                  <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td>
+                  <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
+                  <td class="summary-name">{{id}}</td>
+                  <td class="text-center">{{ip}}</td>
+                  <td class="text-center">{{lon}}</td>
+                  <td class="summary-motion text-center">{{motion}}</td>
+                </tr>
+                </tbody>
+              {{/bots}}
+              </script>
+
+
+          <table id="summary-table" class="table table-striped table-condensed table-hover">
+              <tr>
+                <th colspan="3">Bot Name</th>
+                <th class="text-center">Latitude</th>
+                <th class="text-center">Longitude</th>
+                <th class="text-center">Motion</th>
+              </tr>
+          </table>
 
       </div>
 
@@ -113,7 +109,7 @@
 
     <section class="row">
 
-      <div id="feed-images" class="col-xs-12"> 
+      <div id="feed-images" class="col-xs-12">
 
         <div class="row">
           <div class="image-wrapper col-xs-4">
@@ -152,8 +148,8 @@
         </div>
 
       </div>
-      
-      <div id="feed-actions" class="col-xs-12 text-center" style="padding-bottom: 2rem;"> 
+
+      <div id="feed-actions" class="col-xs-12 text-center" style="padding-bottom: 2rem;">
         <button class="btn btn-default text-uppercase" id="feed-actions-button" ><span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;Load More Photos</button>
       </div>
 
@@ -192,16 +188,18 @@
     </div>
   </div>
 
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUdZOBubT75bK8vPF1QpWEWFAVlnaSVlM&callback=initMap"></script>
-    <script>
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
-        });
-      }
-    </script>
+  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/bower_components/bootstrap-3-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+  <script src="/bower_components/handlebars/handlebars.min.js"></script>
+  <script src="//maps.googleapis.com/maps/api/js?AIzaSyDUsZCP04vN4oxSQBcHmz1YGbTq8RTMEvw"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="assets/js/_global.js"></script>
+
+  <script src="/config.js"></script>
+  <script src="js/Bot.js"></script>
+  <script src="js/Photo.js"></script>
+  <script src="js/dash.js"></script>
 
 </body>
 </html>

@@ -7,6 +7,7 @@ var app = express(),
     port = config.dashboard.port,
     router = express.Router();
 app.use(express.static(__dirname + '/'));
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
 // Set up MARKLOGIC
 var db = marklogic.createDatabaseClient(config.marklogic);

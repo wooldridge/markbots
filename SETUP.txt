@@ -117,7 +117,16 @@ https://www.raspberrypi.org/learning/parent-detector/worksheet/
 13. Install Node.js dependencies. From the markbots directory:
 
 # perform separately, seems to cause problems during full npm install
-sudo npm --save install raspi-io
+# sudo npm --save install raspi-io
+# INSTEAD, INSTALL GLOBALLY AND AVOID HAVING TO INSTALL ON NON-RPI PLATFORMS
+sudo npm -g install raspi-io --unsafe-perms
+
+# to fix install issues with raspi-io, changed perms as described here (option 1):
+https://docs.npmjs.com/getting-started/fixing-npm-permissions
+
+# Ugh, still trying to fix this. Let's just install raspi-io separately and
+# locally on RPi. From markbots home directory:
+sudo npm install raspi-io
 
 # in one setup (#3), experienced error during raspi-io install, had to reboot,
 worked after that

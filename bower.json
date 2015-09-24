@@ -1,0 +1,13 @@
+{
+  "name": "markbots",
+  "dependencies": {
+    "bootstrap": "~3.3.2",
+    "bootstrap-3-datepicker": "~1.4.1",
+    "bootstrap-select": "~1.6.5",
+    "bootstrap3-typeahead": "~3.1.1",
+    "handlebars": "~4.0.3",
+    "jquery": "~2.1.4",
+    "matchHeight": "~0.6.0",
+    "modernizr": "~2.8.3"
+  }
+}
