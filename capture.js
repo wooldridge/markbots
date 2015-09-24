@@ -36,6 +36,7 @@ socket.on('connect', function(){
 socket.on('capture', function(data){
   console.log('capture received');
   console.dir(data);
+  capturePhoto();
 });
 
 // Set up MOTION
