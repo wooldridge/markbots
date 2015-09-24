@@ -3,20 +3,32 @@ MARKBOT SETUP
 Raspberry Pi 2 Model B
 http://www.amazon.com/gp/product/B00MV6TAJI
 
-1. Follow instructions in Quick Start Guide to set up Raspbian operating system using NOOBS (New Out of Box Software).
+1. Follow instructions in Quick Start Guide to insert SD card, connect USB
+mouse and keyboard, connect HDMI monitor, and, lastly, connect the power
+supply. After the device starts up, set up Raspbian operating system using
+NOOBS (New Out of Box Software). Install just the Raspian operating the
+system (the recommended setup).
 
-Note: During one setup my SD card was not showing any available space when inserted on the Raspberry Pi, which meant I couldn't install the Raspbian software via NOOBS. I used the adapter that came with the SD card to insert the card into my MacBook Pro. I opened the Mac OS X Disk Tools application and ran the Verify and Repair tools on the SD card. After that, I inserted the SD card back into my Raspberry Pi and this time it showed available space and installation could proceed.
+Note: During one setup, the SD card was not showing any available space when
+inserted on the Raspberry Pi, which meant I couldn't install the Raspbian
+software via NOOBS. I used the adapter that came with the SD card to insert
+the card into my MacBook Pro. I opened the Mac OS X Disk Tools application and
+ran the Verify and Repair tools on the SD card. I then reinserted the SD card
+into the Raspberry Pi and this time it showed available space and installation
+could proceed.
 
-2. Start up the Raspberry Pi (user: pi password: raspberry) and yse the raspi-config tool to do the following:
+2. Use the raspi-config tool to do the following:
 
-- Set Internationalisation Options to: en_US.UTF-8 UTF-8 (there might be a better option since I've had keyboard character issues on my other Raspberry Pi)
-- Enable support for Raspberry Pi Camera
-- Set boot options to open in GUI as user pi
-- Change regional timezone settings
+- Enable Boot to Desktop/Scratch: Desktop Log in
+- Internationalisation Options: Change Locale: en_US.UTF-8 UTF-8
+- Internationalisation Options: Change Timezone: US: Pacific Ocean
+- Enable Camera: Enable
 
-3. To set up Wifi, shut down the Raspberry Pi, insert the USB Wifi adapter, and restart the Raspberry Pi. Then:
+3. To set up Wifi, shut down the Raspberry Pi, insert the USB Wifi adapter, and
+restart the Raspberry Pi. Then:
 
-Left-click the screen icons in the upper right, select your Wifi network, and enter your Wifi password.
+Left-click the screen icons in the upper right, select your Wifi network, and
+enter your Wifi password.
 
 4. Install Node.js v0.10.40 on the Raspberry Pi:
 
@@ -38,7 +50,19 @@ v0.10.40
 
 https://help.github.com/articles/generating-ssh-keys/
 
-Access to GitHub site features is problematic with the Raspberry Pi browser. I needed to generate my SSH key on the Raspberry Pi and then email to myself. I could then input the key in the GitHub settings via a browser on my Mac.
+# in home folder
+ssh-keygen -t rsa -b 4096 -C "YOUR@EMAIL.COM"
+eval "$(ssh-agent -s)"
+ssh-add .ssh/id_rsa
+cat .ssh/id_rsa.pub
+# copy key to GitHub account
+
+Access to GitHub site features is problematic with the Raspberry Pi browser. I
+needed to generate my SSH key on the Raspberry Pi and then email to myself. I
+could then input the key in the GitHub settings via a browser on my Mac.
+
+Note: At this point during my thrid MarkBot install, the double-quote and
+at-sign characters on my keyboard were swapped.
 
 6. Clone markbots project onto Raspberry Pi:
 
@@ -92,14 +116,44 @@ https://www.raspberrypi.org/learning/parent-detector/worksheet/
 
 13. Install Node.js dependencies. From the markbots directory:
 
+# perform separately, seems to cause problems during full npm install
+sudo npm --save install raspi-io
+
+# in one setup (#3), experienced error during raspi-io install, had to reboot,
+worked after that
+
 sudo npm install
 
 (Takes a while, 15 minutes)
 
-
-TEST MARKBOT
+14. TEST MARKBOT
 
 cd markbots
 sudo chmod 777 *.js
 sudo node capture
 
+15. Tether Bot to iPhone:
+
+http://www.daveconroy.com/how-to-tether-your-raspberry-pi-with-your-iphone-5/
+
+Install the following:
+
+sudo apt-get install gvfs ipheth-utils
+sudo apt-get install libimobiledevice-utils gvfs-backends gvfs-bin gvfs-fuse
+
+Edit:
+
+sudo nano /etc/network/interfaces
+
+to add:
+
+allow-hotplug eth1
+iface eth1 inet dhcp
+
+Confirm before and after tethering with:
+
+ifconfig -s
+
+I was successful tethering with GUI, starting capture, and then disconnecting
+monitor, kyboard, and mouse. I could successfully connect to the demo server
+via the iPhone (without Wifi).

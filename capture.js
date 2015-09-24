@@ -45,7 +45,7 @@ var camera = new raspicam(config.raspicam);
 var db = marklogic.createDatabaseClient(config.marklogic);
 
 // Set up GPS
-// If GPS not working:
+// To reset GPS:
 //   sudo killall gpsd
 //   sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
 var gps = {};
@@ -91,7 +91,6 @@ daemon.start(function() {
     console.log('gpsd connected');
     listener.watch();
     listener.on('TPV', function (data) {
-      //console.log('gps received');
       gps = data;
     });
   });

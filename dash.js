@@ -4,7 +4,7 @@ var config = require('./config'),
 
 // Set up EXPRESS
 var app = express(),
-    port = 3000,
+    port = config.dashboard.port,
     router = express.Router();
 app.use(express.static(__dirname + '/'));
 
@@ -22,7 +22,7 @@ router.use(function(req, res, next) {
 router.get('/data', function(req, res, next) {
   // params from URL
   var start = req.query.start ? req.query.start : 1,
-      length = req.query.length ? req.query.length : 10,
+      length = req.query.length ? req.query.length : 20,
       sort = req.query.sort ? req.query.sort : 'descending',
       min = req.query.min ? req.query.min : '1970-01-01T00:00:00-07:00',
       max = req.query.max ? req.query.max : '2020-12-31T23:59:59-07:00',
@@ -82,6 +82,19 @@ router.get('/data', function(req, res, next) {
       });
       console.log("Result count: " + results.length);
       res.json(results);
+      }, function(error) {
+        console.dir(error);
+    });
+});
+
+// GET photo
+router.get('/photo', function(req, res, next) {
+  // params from URL
+  var uri = req.query.uri ? req.query.uri : '';
+  db.documents.read(uri)
+  .result(function(documents) {
+      res.type('application/jpeg');
+      res.end(documents[0].content, 'binary');
       }, function(error) {
         console.dir(error);
     });
