@@ -2,7 +2,8 @@ var config = {};
 
 config.bot = {
   id: 'BOT_ID', // e.g., 'markbot1'
-  motion: true
+  motion: true,
+  heartbeat: 10000 // milliseconds
 }
 
 // https://www.raspberrypi.org/documentation/raspbian/applications/camera.md

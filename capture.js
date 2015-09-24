@@ -45,6 +45,7 @@ socket.on('capture', function(data){
 socket.on('motion', function(data){
   console.log('motion received');
   console.dir(data);
+  saveBot();
   motionFlag = !motionFlag;
 });
 
@@ -277,4 +278,4 @@ var saveBot = function () {
   );
 };
 
-setInterval(saveBot, 5000, 'foo');
+setInterval(saveBot, config.bot.heartbeat, 'foo');
