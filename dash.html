@@ -152,7 +152,8 @@ $(document).ready(function () {
         count = 0;
     // get GPS coords from first photo that has them, start from most recent
     while (photos[count]) {
-      if (photos[count].getCoords()) {
+      var coords = photos[count].getCoords()
+      if (coords.lat !== null && coords.lon !== null) {
         firstCoords = photos[count].getCoords();
         options.center.lat = firstCoords.lat;
         options.center.lng = firstCoords.lon;

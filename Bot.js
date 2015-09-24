@@ -31,8 +31,8 @@ APP.Bot = function (data) {
   data = data || {};
 
   id = data.properties.id || '';
-  lat = data.properties.lat || 0;
-  lon = data.properties.lon || 0;
+  lat = data.properties.lat || null;
+  lon = data.properties.lon || null;
   ts = data.properties.ts || 0;
   ip = data.properties.ip ? data.properties.ip.replace(/-/g, '.') : '';
   if (data.properties['$ml.prop']['last-modified']) {

@@ -35,8 +35,8 @@ APP.Photo = function (data) {
 
   uri = data.uri || '';
   cat = data.properties.cat || 'photo';
-  lat = data.properties.lat || 0;
-  lon = data.properties.lon || 0;
+  lat = data.properties.lat || null;
+  lon = data.properties.lon || null;
   tr = data.properties.tr || '';
   botId = data.properties.id || '';
   ts = data.properties.ts || '';
