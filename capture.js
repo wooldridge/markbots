@@ -253,7 +253,9 @@ var saveBot = function () {
   db.documents.write({
     uri: config.bot.id + '.json',
     content: properties,
-    collections: ['bots']
+    collections: ['bots'],
+    // save bot data as properties same as photos so we can retrieve similarly
+    properties: properties
   }).result(
     function(response) {
       console.log('Loaded the following documents:');
