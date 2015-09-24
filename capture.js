@@ -230,3 +230,47 @@ var savePhoto = function (buffer) {
     }
   );
 };
+
+// SAVE BOT HEARTBEAT TO MARKLOGIC
+var saveBot = function () {
+  var m = new Date();
+  dateString =
+    m.getFullYear() +'-'+
+    ('0' + (m.getMonth()+1)).slice(-2) +'-'+
+    ('0' + m.getDate()).slice(-2) + '_' +
+    ('0' + m.getHours()).slice(-2) + '-' +
+    ('0' + m.getMinutes()).slice(-2) + '-' +
+    ('0' + m.getSeconds()).slice(-2);
+
+  var properties = {
+    cat: 'bot',
+    id: config.bot.id,
+    lat: gps.lat,
+    lon: gps.lon,
+    ts: dateString,
+    ip: ip
+  };
+  db.documents.write({
+    uri: config.bot.id + '.json',
+    content: properties,
+    collections: ['bots']
+  }).result(
+    function(response) {
+      console.log('Loaded the following documents:');
+      response.documents.forEach( function(document) {
+        console.log('  ' + document.uri);
+      });
+      // io.sockets.emit('photo', {
+      //   filename: dateString + '.jpg',
+      //   url: 'http://' + config.marklogic.host + ':' +
+      //        config.marklogic.port + '/v1/documents?uri=' +
+      //        dateString + '.jpg'
+      // });
+    },
+    function(error) {
+      console.log(JSON.stringify(error, null, 2));
+    }
+  );
+};
+
+setInterval(saveBot, 5000, 'foo');
