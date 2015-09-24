@@ -209,12 +209,12 @@ var savePhoto = function (buffer) {
       response.documents.forEach( function(document) {
         console.log('  ' + document.uri);
       });
-      io.sockets.emit('photo', {
-        filename: dateString + '.jpg',
-        url: 'http://' + config.marklogic.host + ':' +
-             config.marklogic.port + '/v1/documents?uri=' +
-             dateString + '.jpg'
-      });
+      // io.sockets.emit('photo', {
+      //   filename: dateString + '.jpg',
+      //   url: 'http://' + config.marklogic.host + ':' +
+      //        config.marklogic.port + '/v1/documents?uri=' +
+      //        dateString + '.jpg'
+      // });
     },
     function(error) {
       console.log(JSON.stringify(error, null, 2));
