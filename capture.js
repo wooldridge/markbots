@@ -36,7 +36,15 @@ socket.on('connect', function(){
 socket.on('capture', function(data){
   console.log('capture received');
   console.dir(data);
-  capturePhoto();
+  // if ID is this bot, capture photo
+  if (data.id = config.bot.id) {
+    capturePhoto();
+  }
+});
+socket.on('motion', function(data){
+  console.log('motion received');
+  console.dir(data);
+  // TODO handle motion event
 });
 
 // Set up MOTION

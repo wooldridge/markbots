@@ -112,8 +112,14 @@ var server = app.listen(port, function () {
 var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
   console.log('connection established');
-  socket.on('captureReqest', function (data) {
+  socket.on('captureRequest', function (data) {
+    console.log('captureRequest');
     console.dir(data);
     io.sockets.emit('capture', data);
+  });
+  socket.on('motionRequest', function (data) {
+    console.log('motionRequest');
+    console.dir(data);
+    io.sockets.emit('motion', data);
   });
 });

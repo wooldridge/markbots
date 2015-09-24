@@ -116,16 +116,19 @@ $(document).ready(function () {
           $('#summary').html('<tr><td>Bot</td><td>Lat</td><td>Lon</td><td>Actions</td></tr>');
           b = bots[prop];
           var coords = b.getCoords();
-          var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /></td></tr>';
+          var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /> <input type="button" name="'+b.getId()+'" value="motion" /></td></tr>';
           $('#summary').append(row);
         }
 
-
         $("input[value='capture']").click(function () {
           console.dir(this);
-          socket.emit('captureReqest', {id: this.name});
+          socket.emit('captureRequest', {id: this.name});
         });
 
+        $("input[value='motion']").click(function () {
+          console.dir(this);
+          socket.emit('motionRequest', {id: this.name});
+        });
         setUpMap(bots, photos);
       }
     );
