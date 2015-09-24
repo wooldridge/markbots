@@ -45,8 +45,12 @@ socket.on('capture', function(data){
 socket.on('motion', function(data){
   console.log('motion received');
   console.dir(data);
-  saveBot();
-  motionFlag = !motionFlag;
+  // if ID is this bot, toggle motion
+  if (data.id === config.bot.id) {
+    trigger = 'socket'
+    motionFlag = !motionFlag;
+    saveBot();
+  }
 });
 
 // Set up MOTION
