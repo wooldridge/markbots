@@ -214,8 +214,8 @@ $(document).ready(function () {
   //$( "#start-date" ).datepicker({"setDate": "10/12/2012"});
   //$( "#end-date" ).datepicker({"setDate": "4/12/2014"});
 
-  $( "input[type='text']" ).on( "focusout", getPhotos );
-  $( "select" ).on( "change", getPhotos );
+  $( "input[type='text']" ).on( "focusout", getBots );
+  $( "select" ).on( "change", getBots );
 
   // Connect to dashboard socket
   var socket = io.connect('http://' + config.dashboard.host +
