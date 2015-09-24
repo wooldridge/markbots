@@ -1,0 +1,30 @@
+{
+  "name": "mlwonline",
+  "version": "0.0.1",
+  "author": "Stephen Gehring <stephen.gehring@marklogic.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marklogic-marketing/markbot-frontend"
+  },
+  "bugs": {
+    "url": "https://github.com/marklogic-marketing/markbot-frontend/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-copy": "^0.1.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-less": "^1.0.1",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}

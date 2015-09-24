@@ -1,0 +1,35 @@
+
+// ............................................................
+// .for
+
+.for(@i, @n) {.-each(@i)}
+.for(@n)     when (isnumber(@n)) {.for(1, @n)}
+.for(@i, @n) when not (@i = @n)  {
+    .for((@i + (@n - @i) / abs(@n - @i)), @n);
+}
+
+// ............................................................
+// .for-each
+
+.for(@array)   when (default()) {.for-impl_(length(@array))}
+.for-impl_(@i) when (@i > 1)    {.for-impl_((@i - 1))}
+.for-impl_(@i) when (@i > 0)    {.-each(extract(@array, @i))}
+
+
+.border-radius (@radius: 5px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+	border-radius: @radius;
+}
+
+.box-shadow (@string) {
+	-webkit-box-shadow: @string;
+	-moz-box-shadow:    @string;
+	box-shadow:         @string;
+}
+
+.drop-shadow (@x: 0, @y: 1px, @blur: 2px, @spread: 0, @alpha: 0.25) {
+	-webkit-box-shadow:	@x @y @blur @spread rgba(0, 0, 0, @alpha);
+	-moz-box-shadow:	@x @y @blur @spread rgba(0, 0, 0, @alpha);
+	box-shadow:		@x @y @blur @spread rgba(0, 0, 0, @alpha);
+} 

@@ -1,0 +1,114 @@
+
+// SUMARRY TABLE ...............................................
+
+@-webkit-keyframes flash {
+  100% { opacity: 1; }
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-moz-keyframes flash {
+  100% { opacity: 1; }
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-o-keyframes flash {
+  100% { opacity: 1; }
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes flash {
+  100% { opacity: 1; }
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.snap {
+  -webkit-animation: flash 2s; /* Safari 4+ */
+  -moz-animation:    flash 2s; /* Fx 5+ */
+  -o-animation:      flash 2s; /* Opera 12+ */
+  animation:         flash 2s; /* IE 10+, Fx 29+ */
+  animation-duration: 2s;
+
+}
+
+#summary {
+  
+   padding-top: 1.2rem;
+   padding-bottom: .9rem;
+   background: #fff;
+   .border-radius(.3rem);
+   .drop-shadow();
+
+    table {
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 1rem;
+      
+      tr {
+        
+        th {
+          border-bottom: 2px solid #ddd;
+        }
+        
+        td {
+          cursor: pointer;
+        }
+
+        th,
+        td {
+          border-right: 1px solid #ddd;
+
+          &:first-child {
+            border-right: none;
+            border-left: 4px solid #999;
+            padding-left: 1rem;
+          }
+
+          &.summary-active {
+            border-left:4px solid #1f9072; 
+            background: #5cb85c;
+          }
+
+          &.summary-action {
+            width: 3.5%;
+            text-align: center;
+            border-right: none!important;
+          
+          a {
+            color: #666;
+          
+            .glyphicon {
+              display: inline-block;
+            }
+
+            &:hover {
+              color: #333333;
+            }
+          }
+        }
+        
+         &.summary-motion {          
+          text-transform: uppercase;
+        }
+      } 
+
+      th:first-child {
+        border-right: 1px solid #ccc;
+      }
+      
+      &.summary-active {          
+        td {
+          background: #e6ece8;
+          border-bottom: 1px solid #d1ded7;
+          border-right: 1px solid #d1ded7;
+          
+          &:first-child {
+            border-left:4px solid #1f9072;
+          }
+        }
+      }
+
+    }
+
+  }
+}
+

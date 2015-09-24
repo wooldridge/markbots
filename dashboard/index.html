@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>MarkBot</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/app.min.js" type="text/javascript" charset="UTF-8" ></script>
+</head>
+<body>
+
+  <header style="border-bottom:1px solid #ccc;">
+    <div class="logo" style="padding:1.4rem;">  
+        <a href="/">
+          <img src="images/markbot-logo.svg" alt="MarkBot" />
+        </a>
+    </div>
+  </header>
+
+  <div id="map"></div>
+
+  <main class="container">
+
+    <section class="row">
+      <div id="controls" class="col-xs-12">
+
+        <div class="row">
+          
+          <div class="input-group-wrapper col-sm-4">
+            <div class="input-daterange input-group" id="datepicker">
+              <input type="text" class="input-sm form-control" name="start" placeholder="Start Date" />
+              <span class="input-group-addon">to</span>
+              <input type="text" class="input-sm form-control" name="end" placeholder="End Date"  />
+            </div>
+          </div>
+
+          <div class="input-group-wrapper col-sm-3">
+            <select class="form-control input-sm">
+              <option>Please Select Method</option>
+              <option>All</option>
+              <option>Motion</option>
+              <option>User</option>
+            </select>
+          </div>
+
+          <div class="input-group-wrapper col-sm-4">
+            <select class="form-control input-sm">
+              <option>Please Select Bot ID</option>
+              <option>All</option>
+              <option>markbot 1</option>
+              <option>markbot 2</option>
+            </select>
+          </div>
+
+          <div class="input-group-wrapper col-sm-1">
+            <select class="form-control input-sm" >
+              <option>Items</option>
+              <option>10</option>
+              <option>20</option>
+              <option>40</option>
+              <option>80</option>
+              <option>320</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section class="row">
+
+      <div id="summary" class="col-xs-12">
+
+        <h2>Bot Summary</h2>
+
+        <table id="summary-table" class="table table-striped table-condensed table-hover">
+          <tr>
+            <th colspan="3">Bot Name</th>
+            <th class="text-center">Latitude</th>
+            <th class="text-center">Longitude</th>
+            <th class="text-center">Motion</th>
+          </tr> 
+          <tr class="summary-row summary-active">
+            <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td>
+            <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
+            <td class="summary-name">M1</td>
+            <td class="text-center">38.21</td>
+            <td class="text-center">-122.331</td>
+            <td class="summary-motion text-center">On</td>
+          </tr>
+          <tr class="summary-row">
+            <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td>
+            <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
+            <td class="summary-name">M2</td>
+            <td class="text-center">38.21</td>
+            <td class="text-center">-122.331</td>
+            <td class="summary-motion text-center">Off</td>
+          </tr>
+          <tr class="summary-row summary-active">
+            <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td>
+            <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
+            <td class="summary-name">M3</td>
+            <td class="text-center">38.21</td>
+            <td class="text-center">-122.331</td>
+            <td class="summary-motion text-center">On</td>
+          </tr>
+        </table>
+
+      </div>
+
+    </section>
+
+    <section class="row">
+
+      <div id="feed-images" class="col-xs-12"> 
+
+        <div class="row">
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-1" data-toggle="modal" data-target="#imgModal" class="img-link" ><img src="https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/e15/11899569_978625305492093_470386798_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-2" data-toggle="modal" data-target="#imgModal" class="img-link" ><img src="https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/e15/11821153_1081792061838964_997445369_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-3" data-toggle="modal" data-target="#imgModal" class="img-link" ><img src="https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/e15/11371206_511001109057790_677220464_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-4" data-toggle="modal" data-target="#imgModal" class="img-link"><img src="https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/e15/11410702_1474513066186662_1586737198_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-5" data-toggle="modal" data-target="#imgModal" class="img-link"><img src="https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11255168_143523509328315_1915779370_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-6" data-toggle="modal" data-target="#imgModal" class="img-link"><img src="https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11849329_875798732502133_451198404_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-7" data-toggle="modal" data-target="#imgModal" class="img-link"><img src="https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/11939540_1650214795237446_1493817037_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-8" data-toggle="modal" data-target="#imgModal" class="img-link"><img src="https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11939565_404515066414611_1155597555_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+          <div class="image-wrapper col-xs-4">
+            <a href="#image-9" data-toggle="modal" data-target="#imgModal" class="img-link"><img src="https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11925634_1695398760689957_1407946819_n.jpg" border="0" class="img-thumbnail" /></a>
+          </div>
+        </div>
+
+      </div>
+      
+      <div id="feed-actions" class="col-xs-12 text-center" style="padding-bottom: 2rem;"> 
+        <button class="btn btn-default text-uppercase" id="feed-actions-button" ><span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;Load More Photos</button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <div class="modal fade img-modal" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Bot Snapshot</h4>
+        </div>
+        <div class="modal-body">
+          <img src="https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/e15/11899569_978625305492093_470386798_n.jpg" border="0" class="modal-img img-responsive">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade snapshot-modal" id="snapShotModal" tabindex="-1" role="dialog" aria-labelledby="snapShotModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Take Snapshot</h4>
+        </div>
+        <div class="modal-body">
+          <img src="http://1x1px.me/FF4D00-0.png" border="0" class="modal-img img-responsive"  style="width:100%; background: #000;">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-block" id="take-picture"><span class="glyphicon glyphicon-camera"></span> Take Picture</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUdZOBubT75bK8vPF1QpWEWFAVlnaSVlM&callback=initMap"></script>
+    <script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 8
+        });
+      }
+    </script>
+
+</body>
+</html>
