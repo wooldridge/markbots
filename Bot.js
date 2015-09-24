@@ -82,7 +82,7 @@ APP.Bot = function (data) {
   * @param photo A Photo object.
   */
   addPhoto = function (photo) {
-    // If photo added is most recent, use as basis for properties
+    // If photo added is more recent, use as basis for properties
     var photoLastMod = photo.getLastMod().getTime();
     if (lastMod === '' || lastMod.getTime() < photoLastMod) {
       var photoCoords = photo.getCoords();

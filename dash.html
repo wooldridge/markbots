@@ -70,11 +70,31 @@ $(document).ready(function () {
       botsToColors = {},
       userCoords = {};
 
-  function getPhotos() {
+  function getBots() {
+    // TODO make this configurable
+    var str = $('form').serialize();
+    bots = {};
+    $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/bots?' + str)
+      .done(function(data) {
+        if ( console && console.log ) {
+          console.log( data );
+        }
+        //$('#result').html('');
+        data.forEach(function(res) {
+          var b = new APP.Bot(res);
+          bots[b.getId()] = b;
+          console.log("Bot ID: " + b.getId());
+        });
+
+        getPhotos(bots);
+      }
+    );
+  }
+
+  function getPhotos(bots) {
     // TODO make this configurable
     var str = $('form').serialize();
     photos = [];
-    bots = {};
     $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photos?' + str)
       .done(function(data) {
         if ( console && console.log ) {
@@ -83,17 +103,7 @@ $(document).ready(function () {
         $('#result').html('');
         data.forEach(function(res) {
           var p = new APP.Photo(res);
-          // if bot ID not recognized, create a new one in bots obj
-          var botId = p.getBotId();
-          if (!bots[botId]) {
-            var b = new APP.Bot(res);
-            b.addPhoto(p);
-            bots[botId] = b;
-          }
-          // else add photo to existing bot obj
-          else {
-            bots[botId].addPhoto(p);
-          }
+          bots[p.getBotId()].addPhoto(p);
           p.setBot(bots[botId]);
           photos.push(p);
           console.log("URI: " + p.getUri());
@@ -113,10 +123,10 @@ $(document).ready(function () {
 
         // Set up table
         for (var prop in bots) {
-          $('#summary').html('<tr><td>Bot</td><td>Lat</td><td>Lon</td><td>Actions</td></tr>');
+          $('#summary').html('<tr><td>Bot</td><td>Lat</td><td>Lon</td><td>Last Activity</td><td>Actions</td></tr>');
           b = bots[prop];
           var coords = b.getCoords();
-          var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /> <input type="button" name="'+b.getId()+'" value="motion" /></td></tr>';
+          var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td>'+b.getLastMod()+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /> <input type="button" name="'+b.getId()+'" value="motion" /></td></tr>';
           $('#summary').append(row);
         }
 
@@ -133,6 +143,7 @@ $(document).ready(function () {
       }
     );
   }
+
   var options = {
         center: {},
         scrollwheel: false,
@@ -210,7 +221,7 @@ $(document).ready(function () {
   var socket = io.connect('http://' + config.dashboard.host +
                         ':' + config.dashboard.port);
 
-  getPhotos();
+  getBots();
 
 
   // http://blog.stchur.com/2010/01/15/programmatically-clicking-a-link-in-javascript/

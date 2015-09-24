@@ -155,8 +155,8 @@ router.get('/bots', function(req, res, next) {
 router.get('/bot', function(req, res, next) {
   // params from URL
   var id = req.query.id ? req.query.id : '',
-      uri = id + '.json';
-  db.documents.read(uri, ['meta'])
+      uri = id;
+  db.documents.read({uris: uri, categories: 'properties'})
   .result(function(documents) {
       res.type('application/json');
       console.dir(documents[0]);
