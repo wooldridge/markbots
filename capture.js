@@ -251,8 +251,8 @@ var saveBot = function () {
     ip: ip
   };
   db.documents.write({
-    uri: config.bot.id + '.json',
-    content: properties,
+    uri: config.bot.id,
+    content: '',
     collections: ['bots'],
     // save bot data as properties same as photos so we can retrieve similarly
     properties: properties

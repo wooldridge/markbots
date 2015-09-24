@@ -75,7 +75,7 @@ $(document).ready(function () {
     var str = $('form').serialize();
     photos = [];
     bots = {};
-    $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/data?' + str)
+    $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photos?' + str)
       .done(function(data) {
         if ( console && console.log ) {
           console.log( data );

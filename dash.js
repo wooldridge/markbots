@@ -107,7 +107,7 @@ router.get('/bots', function(req, res, next) {
       length = req.query.length ? req.query.length : 20,
       sort = req.query.sort ? req.query.sort : 'descending',
       min = req.query.min ? req.query.min : '1970-01-01T00:00:00-07:00',
-      max = req.query.max ? req.query.max : '2020-12-31T23:59:59-07:00',
+      max = req.query.max ? req.query.max : '2020-12-31T23:59:59-07:00';
   db.documents.query(
     q.where(
       q.collection("bots"),
@@ -156,10 +156,11 @@ router.get('/bot', function(req, res, next) {
   // params from URL
   var id = req.query.id ? req.query.id : '',
       uri = id + '.json';
-  db.documents.read(uri)
+  db.documents.read(uri, ['meta'])
   .result(function(documents) {
       res.type('application/json');
-      res.end(documents[0].content, 'json');
+      console.dir(documents[0]);
+      res.json(documents[0]);
       }, function(error) {
         console.dir(error);
     });
