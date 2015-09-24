@@ -82,7 +82,7 @@ $(document).ready(function () {
 
         var source = $("#summary-table-template").html();
         var template = Handlebars.compile(source);
-        $("#summary-table").append(template(json));
+        $("#summary-table tbody").html('').append(template(json));
 
         $("input[value='capture']").click(function () {
           console.dir(this);
