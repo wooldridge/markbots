@@ -82,7 +82,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // Task definition
-    grunt.registerTask('default', ['concat','uglify','less', 'watch']);
+    //grunt.registerTask('default', ['concat','uglify','less', 'watch']);
+    grunt.registerTask('default', ['uglify','less', 'watch']);
 
-    grunt.registerTask('build', ['concat','uglify','less']);
+    //grunt.registerTask('build', ['concat','uglify','less']);
+    grunt.registerTask('build', ['uglify','less']);
 };
