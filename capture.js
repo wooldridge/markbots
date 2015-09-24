@@ -37,7 +37,7 @@ socket.on('capture', function(data){
   console.log('capture received');
   console.dir(data);
   // if ID is this bot, capture photo
-  if (data.id = config.bot.id) {
+  if (data.id === config.bot.id) {
     trigger = 'socket'
     capturePhoto();
   }
