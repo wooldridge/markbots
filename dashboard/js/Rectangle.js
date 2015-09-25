@@ -44,7 +44,12 @@ APP.Rectangle = function (map, coords) {
     bounds: bounds,
     editable: true,
     draggable: true,
-    visible: false
+    visible: false,
+    fillColor: '#999999',
+    fillOpacity: 0.3,
+    strokeColor: '#999999',
+    strokeOpacity: 0.8,
+    strokeWeight: 2
   });
 
   // Use show() to make visible
