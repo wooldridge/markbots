@@ -5,7 +5,12 @@ $(document).ready(function () {
       botsToColors = {},
       userCoords = {},
       bots = [],
-      botsMap = {};
+      botsMap = {}
+      colors = {
+        marbot1: '#be1e2d',
+        markbot2: '#1b68b3',
+        markbot3: '#1d9072'
+      };
 
   function getBots() {
     // TODO make this configurable
