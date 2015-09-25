@@ -103,12 +103,6 @@ $(document).ready(function () {
     );
   }
 
-  var options = {
-        center: {},
-        scrollwheel: false,
-        zoom: 19
-  };
-
   function setUpMap(bots, photos) {
     // Get user GPS coords
     if (navigator.geolocation) {
@@ -121,21 +115,21 @@ $(document).ready(function () {
         console.log("Geolocation is not supported by this browser.");
     }
 
-    var firstCoords = {lat: '', lon: ''},
-        count = 0;
+    var mapOptions = config.map;
+
+    var count = 0;
     // get GPS coords from first photo that has them, start from most recent
     while (photos[count]) {
       var coords = photos[count].getCoords()
       if (coords.lat !== null && coords.lon !== null) {
-        firstCoords = photos[count].getCoords();
-        options.center.lat = firstCoords.lat;
-        options.center.lng = firstCoords.lon;
+        mapOptions.center.lat = coords.lat;
+        mapOptions.center.lng = coords.lon;
         break;
       }
       count++;
     }
 
-    var map = new google.maps.Map(document.getElementById('map'), options);
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
     coordsForLine = {};
     photos.forEach(function(photo) {

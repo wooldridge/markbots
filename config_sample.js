@@ -6,6 +6,14 @@ config.bot = {
   heartbeat: 10000 // milliseconds
 }
 
+// Google map options
+config.map = {
+  center: {},
+  scrollwheel: false,
+  streetViewControl: false,
+  zoom: 19
+};
+
 // https://www.raspberrypi.org/documentation/raspbian/applications/camera.md
 config.raspicam = {
   mode: "photo",
