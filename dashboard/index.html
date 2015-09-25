@@ -81,6 +81,7 @@
           <script id="summary-table-template" type="text/x-handlebars-template">
             <tr>
               <th colspan="2">Bot Name</th>
+              <th class="text-center">Photos</th>
               <th class="text-center">Latitude</th>
               <th class="text-center">Longitude</th>
               <th class="text-center">Last Activity</th>
@@ -98,6 +99,7 @@
                 <td class="summary-action summary-action-capture"><img src="images/{{id}}_sm.png" border="0" /></td>
                 <!-- <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td> -->
                 <td class="summary-name">{{id}}</td>
+                <td class="text-center">{{numPhotos}}</td>
                 <td class="text-center">{{lat}}</td>
                 <td class="text-center">{{lon}}</td>
                 <td class="text-center">{{dateFormat lastMod format="MM/DD/YYYY HH:mm:ss"}}</td>

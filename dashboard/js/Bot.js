@@ -153,7 +153,8 @@ APP.Bot = function (data) {
       lastMod: lastMod,
       lastCap: lastCap,
       status: isOnline(),
-      mot: mot
+      mot: mot,
+      numPhotos: getPhotos().length
     }
     return json;
   };
