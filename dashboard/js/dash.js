@@ -134,7 +134,7 @@ $(document).ready(function () {
 
     var map = new google.maps.Map(document.getElementById('map'), options);
 
-    coordsForLine = [];
+    coordsForLine = {};
     photos.forEach(function(photo) {
       var coords = photo.getCoords();
       if (coords.lat && coords.lon) {
@@ -147,7 +147,13 @@ $(document).ready(function () {
           title: photo.getUri(),
           icon: 'images/'+photo.getBotId()+'.png'
         });
-        coordsForLine.push({lat: coords.lat, lng: coords.lon});
+        if (coordsForLine[photo.getBotId()]) {
+          coordsForLine[photo.getBotId()].push({lat: coords.lat, lng: coords.lon});
+        } else {
+          coordsForLine[photo.getBotId()] = [];
+          coordsForLine[photo.getBotId()].push({lat: coords.lat, lng: coords.lon});
+        }
+        //coordsForLine.push({lat: coords.lat, lng: coords.lon});
         // Open lightbox image on marker click
         google.maps.event.addListener(marker, 'click', function() {
           actuateLink(document.getElementById(photo.getUri()));
@@ -155,15 +161,17 @@ $(document).ready(function () {
       }
     });
 
-    var photoPath = new google.maps.Polyline({
-      path: coordsForLine,
-      geodesic: true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1.0,
-      strokeWeight: 2
+    bots.forEach(function(b) {
+      var photoPath = new google.maps.Polyline({
+        path: coordsForLine[b.getId()],
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      });
+      photoPath.setMap(map);
     });
 
-    photoPath.setMap(map);
   }
 
   // Set up filters
