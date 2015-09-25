@@ -79,12 +79,13 @@
 
           <script id="summary-table-template" type="text/x-handlebars-template">
             <tr>
-              <th colspan="3">Bot Name</th>
+              <th colspan="2">Bot Name</th>
               <th class="text-center">Latitude</th>
               <th class="text-center">Longitude</th>
               <th class="text-center">Last Activity</th>
               <th class="text-center">Online</th>
               <th class="text-center">Motion</th>
+              <th class="text-center">Capture</th>
             </tr>
             {{#bots}}
               {{#everyOther @index 2}}
@@ -94,17 +95,20 @@
               {{/everyOther}}
                 <!-- <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td> -->
                 <td class="summary-action summary-action-capture"><img src="images/{{id}}_sm.png" border="0" /></td>
-                <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td>
+                <!-- <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td> -->
                 <td class="summary-name">{{id}}</td>
                 <td class="text-center">{{lat}}</td>
                 <td class="text-center">{{lon}}</td>
                 <td class="text-center">{{dateFormat lastMod format="YYYY-MM-DD HH:mm:ss"}}</td>
-                  {{#if status}}
-                    <td class="text-center">Yes</td>
-                  {{else}}
-                    <td class="text-center">No</td>
-                  {{/if}}
-                <td class="summary-motion text-center">{{mot}}</td>
+                <td class="text-center">
+                  {{#if status}}Yes{{else}}No{{/if}}
+                </td>
+                <td class="text-center">
+                  {{#if mot}}On{{else}}Off{{/if}}
+                </td>
+                <td class="summary-action summary-action-capture">
+                  <a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a>
+                </td>
               </tr>
             {{/bots}}
           </script>

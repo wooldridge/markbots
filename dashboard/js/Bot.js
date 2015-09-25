@@ -47,7 +47,11 @@ APP.Bot = function (data) {
     lastMod = '';
   }
   lastCap = ''; // is set based on added photos
-  mot = data.properties.mot || null;
+  if (typeof data.properties.mot === 'boolean') {
+    mot = data.properties.mot;
+  } else {
+    mot = null;
+  }
   photos = [];
 
  /**
