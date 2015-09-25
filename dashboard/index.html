@@ -57,7 +57,7 @@
           <div class="input-group-wrapper col-sm-2">
             <select name="length" id="length" class="form-control input-sm" >
               <option value="12">12 Photos</option>
-              <option value="36">36 Photos</option>
+              <option value="36" selected="selected">36 Photos</option>
               <option value="60">60 Photos</option>
               <option value="120">120 Photos</option>
               <option value="180">180 Photos</option>
@@ -126,9 +126,19 @@
 
     <section class="row">
 
-      <div id="result" class="col-xs-12"></div>
+      <script id="photo-template" type="text/x-handlebars-template">
+        {{#photos}}
+          <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}}" data-lightbox="markbot" data-title="{{lastMod}}">
+            <div class="image-wrapper col-xs-2">
+              <img src="http://{{host}}:{{port}}/api/photo?uri={{uri}}" class="img-thumbnail" />
+            </div>
+          </a>
+        {{/photos}}
+      </script>
 
-    </section>
+      <div id="photos" class="col-xs-12"></div>
+
+      </section>
 
   </main>
 

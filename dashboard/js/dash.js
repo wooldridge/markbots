@@ -41,6 +41,7 @@ $(document).ready(function () {
     // TODO make this configurable
     var str = $('form').serialize();
     photos = [];
+    var photosJson = [];
     $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photos?' + str)
       .done(function(data) {
         if ( console && console.log ) {
@@ -54,30 +55,25 @@ $(document).ready(function () {
           p.setBot(bots[botIndex]);
           photos.push(p);
           console.log("URI: " + p.getUri());
-          // TODO make this configurable
-          var img = '<a id="'+p.getUri()+'" href="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
-                    p.getUri() + '" data-lightbox="markbot" data-title="' + p.getLastMod() + '">';
-          img += '<div class="image-wrapper col-xs-2">';
-          img += '<img src="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
-                    p.getUri() + '" class="img-thumbnail" />';
-          img += '</div>';
-          img += '</a>';
-          $('#result').append(img);
+          json = p.getAsJson();
+          json.host = config.dashboard.host;
+          json.port = config.dashboard.port;
+          photosJson.push(json);
         });
 
-        // if (photos.length > 0) {
-        //   $('#start-date').val(photos[photos.length - 1].properties['$ml.prop']['last-modified']);
-        //   $('#end-date').val(photos[0].properties['$ml.prop']['last-modified']);
-        // }
+        json = {photos: photosJson};
+
+        var source = $("#photo-template").html();
+        var template = Handlebars.compile(source);
+        $("#photos").html('').append(template(json));
 
         // Set up table
-        //$('#summary').html('<tr><td>Bot</td><td>Lat</td><td>Lon</td><td>Last Activity</td><td>Status</td><td>Motion</td><td>Actions</td></tr>');
         var botsJson = [];
         bots.forEach(function(b) {
           var coords = b.getCoords();
           var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td>'+b.getLastCap()+'</td><td>'+(b.isOnline() ? 'Online' : 'Offline')+'</td><td>'+(b.getMotion() ? 'On' : 'Off')+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /> <input type="button" name="'+b.getId()+'" value="motion" /></td></tr>';
           //$('#summary').append(row);
-          // ONLY PUSH IF BOT HAS IMAGES
+          // Only push if bot has images
           if (b.getPhotos().length > 0) {
             botsJson.push(b.getAsJson());
           }

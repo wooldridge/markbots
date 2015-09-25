@@ -28,7 +28,8 @@ APP.Photo = function (data) {
       getIp,
       getLastMod,
       setBot,
-      getBot;
+      getBot,
+      getAsJson;
 
   // initialize properties
   data = data || {};
@@ -100,6 +101,23 @@ APP.Photo = function (data) {
     return bot;
   };
 
+ /**
+  * Get as a JSON representation (for templating).
+  */
+  getAsJson = function () {
+    var json = {
+      uri: uri,
+      lat: lat,
+      lon: lon,
+      ip: ip,
+      lastMod: lastMod,
+      ts: ts,
+      botId: botId,
+      tr: tr
+    }
+    return json;
+  };
+
   // Public API
   return {
     getUri: getUri,
@@ -109,7 +127,8 @@ APP.Photo = function (data) {
     getIp: getIp,
     getLastMod: getLastMod,
     setBot: setBot,
-    getBot: getBot
+    getBot: getBot,
+    getAsJson: getAsJson
   };
 
 };
