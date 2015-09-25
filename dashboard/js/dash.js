@@ -77,7 +77,10 @@ $(document).ready(function () {
           var coords = b.getCoords();
           var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td>'+b.getLastCap()+'</td><td>'+(b.isOnline() ? 'Online' : 'Offline')+'</td><td>'+(b.getMotion() ? 'On' : 'Off')+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /> <input type="button" name="'+b.getId()+'" value="motion" /></td></tr>';
           //$('#summary').append(row);
-          botsJson.push(b.getAsJson());
+          // ONLY PUSH IF BOT HAS IMAGES
+          if (b.getPhotos().length > 0) {
+            botsJson.push(b.getAsJson());
+          }
         });
 
         json = {bots: botsJson};
@@ -162,14 +165,16 @@ $(document).ready(function () {
     });
 
     bots.forEach(function(b) {
-      var photoPath = new google.maps.Polyline({
-        path: coordsForLine[b.getId()],
-        geodesic: true,
-        strokeColor: '#666666',
-        strokeOpacity: 0.4,
-        strokeWeight: 2
-      });
-      photoPath.setMap(map);
+      if (coordsForLine[b.getId()]) {
+        var photoPath = new google.maps.Polyline({
+          path: coordsForLine[b.getId()],
+          geodesic: true,
+          strokeColor: '#666666',
+          strokeOpacity: 0.4,
+          strokeWeight: 2
+        });
+        photoPath.setMap(map);
+      }
     });
 
   }
@@ -178,8 +183,15 @@ $(document).ready(function () {
   //$( "#start-date" ).datepicker({"setDate": "10/12/2012"});
   //$( "#end-date" ).datepicker({"setDate": "4/12/2014"});
 
-  $( "input[type='text']" ).on( "focusout", getBots );
+  //$( "input[type='text']" ).on( "focusout", getBots );
   $( "select" ).on( "change", getBots );
+
+  $('.input-daterange input').each(function() {
+    $(this).datepicker({format: 'yyyy-mm-dd'}).on('changeDate', function(e) {
+        console.dir(e);
+        getBots();
+    });
+  });
 
   // Connect to dashboard socket
   var socket = io.connect('http://' + config.dashboard.host +

@@ -32,9 +32,9 @@
 
           <div class="input-group-wrapper col-sm-4">
             <div class="input-daterange input-group" id="datepicker">
-              <input type="text" class="input-sm form-control" name="start" placeholder="Start Date" />
+              <input type="text" class="input-sm form-control" name="min" placeholder="Start Date" />
               <span class="input-group-addon">to</span>
-              <input type="text" class="input-sm form-control" name="end" placeholder="End Date"  />
+              <input type="text" class="input-sm form-control" name="max" placeholder="End Date"  />
             </div>
           </div>
 
@@ -100,7 +100,7 @@
                 <td class="summary-name">{{id}}</td>
                 <td class="text-center">{{lat}}</td>
                 <td class="text-center">{{lon}}</td>
-                <td class="text-center">{{dateFormat lastMod format="YYYY-MM-DD HH:mm:ss"}}</td>
+                <td class="text-center">{{dateFormat lastMod format="MM/DD/YYYY HH:mm:ss"}}</td>
                 <td class="text-center">
                   {{#if status}}Yes{{else}}No{{/if}}
                 </td>

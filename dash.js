@@ -25,10 +25,20 @@ router.get('/photos', function(req, res, next) {
   var start = req.query.start ? req.query.start : 1,
       length = req.query.length ? req.query.length : 20,
       sort = req.query.sort ? req.query.sort : 'descending',
-      min = req.query.min ? req.query.min : '1970-01-01T00:00:00-07:00',
-      max = req.query.max ? req.query.max : '2020-12-31T23:59:59-07:00',
       tr = req.query.tr ? req.query.tr : '',
       id = req.query.id ? req.query.id : '';
+      if (req.query.min) {
+        var parts = req.query.min.split('/');
+        var min = parts[2] + '-' + parts[0] + '-' + parts[1] + 'T00:00:00-07:00';
+      } else {
+        var min = '1970-01-01T00:00:00-07:00';
+      }
+      if (req.query.max) {
+        parts = req.query.max.split('/');
+        var max = parts[2] + '-' + parts[0] + '-' + parts[1] + 'T00:00:00-07:00';
+      } else {
+        var max = '2020-12-31T23:59:59-07:00';
+      }
   db.documents.query(
     q.where(
       q.collection("photos"),
@@ -106,29 +116,11 @@ router.get('/bots', function(req, res, next) {
   // params from URL
   var start = req.query.start ? req.query.start : 1,
       length = req.query.length ? req.query.length : 20,
-      sort = req.query.sort ? req.query.sort : 'descending',
-      min = req.query.min ? req.query.min : '1970-01-01T00:00:00-07:00',
-      max = req.query.max ? req.query.max : '2020-12-31T23:59:59-07:00';
+      sort = req.query.sort ? req.query.sort : 'descending';
   db.documents.query(
     q.where(
       q.collection("bots"),
-      q.fragmentScope('properties'),
-      // Range minimum
-      q.range(
-        q.element(q.qname('http://marklogic.com/xdmp/property', 'last-modified')),
-        q.datatype('dateTime'),
-        '>=',
-        min,
-        q.fragmentScope('properties')
-      ),
-      // Range maximum
-      q.range(
-        q.element(q.qname('http://marklogic.com/xdmp/property', 'last-modified')),
-        q.datatype('dateTime'),
-        '<=',
-        max,
-        q.fragmentScope('properties')
-      )
+      q.fragmentScope('properties')
     )
     // @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
     .orderBy(
