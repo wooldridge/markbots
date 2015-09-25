@@ -165,8 +165,8 @@ $(document).ready(function () {
       var photoPath = new google.maps.Polyline({
         path: coordsForLine[b.getId()],
         geodesic: true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
+        strokeColor: '#666666',
+        strokeOpacity: 0.4,
         strokeWeight: 2
       });
       photoPath.setMap(map);
