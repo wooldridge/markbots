@@ -124,7 +124,7 @@ $(document).ready(function () {
         console.log("Geolocation is not supported by this browser.");
     }
 
-    var mapOptions = config.map;
+    var mapOptions = config.map.options;
 
     var count = 0;
     // get GPS coords from first photo that has them, start from most recent
@@ -139,6 +139,17 @@ $(document).ready(function () {
     }
 
     var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+    var rectangle = new APP.Rectangle(map);
+    rectangle.show();
+    rectangle.setListener(function (event) {
+      var coords = rectangle.getCoords();
+      console.dir(coords);
+      $('form #lat1').val(coords.lat1);
+      $('form #lon1').val(coords.lon1);
+      $('form #lat2').val(coords.lat2);
+      $('form #lon2').val(coords.lon2);
+    });
 
     coordsForLine = {};
     photos.forEach(function(photo) {
@@ -220,10 +231,6 @@ Handlebars.registerHelper("everyOther", function (index, amount, scope) {
     else
         return scope.fn(this);
 });
-
-  // var source = $("#summary-table-template").html();
-  // var tableTemplate = Handlebars.compile(source);
-  // var resultsPlaceholder = $("#summary-table");
 
   getBots();
 

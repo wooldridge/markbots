@@ -16,6 +16,7 @@ var q = marklogic.queryBuilder;
 // Log requests
 router.use(function(req, res, next) {
   console.log('%s %s', req.method, req.url);
+  console.dir(req.query);
   next();
 });
 
@@ -26,7 +27,11 @@ router.get('/photos', function(req, res, next) {
       length = req.query.length ? req.query.length : 20,
       sort = req.query.sort ? req.query.sort : 'descending',
       tr = req.query.tr ? req.query.tr : '',
-      id = req.query.id ? req.query.id : '';
+      id = req.query.id ? req.query.id : '',
+      lat1 = req.query.lat1 ? req.query.lat1 : '',
+      lon1 = req.query.lon1 ? req.query.lon1 : '',
+      lat2 = req.query.lat2 ? req.query.lat2 : '',
+      lon2 = req.query.lon2 ? req.query.lon2 : '';
       if (req.query.min) {
         var parts = req.query.min.split('/');
         var min = parts[2] + '-' + parts[0] + '-' + parts[1] + 'T00:00:00-07:00';
@@ -39,8 +44,9 @@ router.get('/photos', function(req, res, next) {
       } else {
         var max = '2020-12-31T23:59:59-07:00';
       }
-  db.documents.query(
-    q.where(
+
+  // where clause
+  var whereClause = [
       q.collection("photos"),
       q.fragmentScope('properties'),
       // Range minimum
@@ -75,7 +81,27 @@ router.get('/photos', function(req, res, next) {
         tr,
         q.fragmentScope('properties')
       )
-    )
+  ];
+
+  // Add a geospatial constraint if the coords are passed in
+  // lat1 - N, lon1 - E, lat2 - S, lon2 - W
+  if (lat1 && lon1 && lat2 && lon2) {
+    whereClause.push(
+      q.propertiesFragment(
+        q.geospatial(
+          q.geoElementPair(
+            q.qname('http://marklogic.com/xdmp/property', 'properties'),
+            q.qname('http://marklogic.com/xdmp/json/basic', 'lat'),
+            q.qname('http://marklogic.com/xdmp/json/basic', 'lon')
+          ),
+          q.box(parseFloat(lat2), parseFloat(lon2), parseFloat(lat1), parseFloat(lon1))
+        )
+      )
+    );
+  }
+
+  db.documents.query(
+    q.where(whereClause)
     // @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
     .orderBy(
       q.sort(

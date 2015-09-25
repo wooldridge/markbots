@@ -65,6 +65,12 @@
             </select>
           </div>
 
+          <!-- geolocation data -->
+          <input type="hidden" id="lat1" name="lat1"  />
+          <input type="hidden" id="lon1" name="lon1"  />
+          <input type="hidden" id="lat2" name="lat2"  />
+          <input type="hidden" id="lon2" name="lon2"  />
+
         </form>
 
         </div>
@@ -130,7 +136,7 @@
 
       <script id="photo-template" type="text/x-handlebars-template">
         {{#photos}}
-          <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}}" data-lightbox="markbot" data-title="{{lastMod}}">
+          <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}}" data-lightbox="markbot" data-title="{{lastMod}} ({{lat}}, {{lon}})">
             <div class="image-wrapper col-xs-2">
               <img src="http://{{host}}:{{port}}/api/photo?uri={{uri}}" class="img-thumbnail" />
             </div>
@@ -188,6 +194,7 @@
   <script src="/config.js"></script>
   <script src="js/Bot.js"></script>
   <script src="js/Photo.js"></script>
+  <script src="js/Rectangle.js"></script>
   <script src="js/dash.js"></script>
 
 </body>
