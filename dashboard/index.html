@@ -106,11 +106,11 @@
                 <td class="text-center">
                   {{#if status}}Yes{{else}}No{{/if}}
                 </td>
-                <td class="text-center">
-                  {{#if mot}}On{{else}}Off{{/if}}
+                <td class="text-center summary-action-move">
+                  <a href="#" rel="{{id}}">{{#if mot}}On{{else}}Off{{/if}}</a>
                 </td>
                 <td class="summary-action summary-action-capture">
-                  <a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a>
+                  <a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link" rel="{{id}}"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a>
                 </td>
               </tr>
             {{/bots}}

@@ -99,6 +99,14 @@ $(document).ready(function () {
           console.dir(this);
           socket.emit('motionRequest', {id: this.name});
         });
+
+        // Click motion in table
+        $('.summary-action-move a').on('click', function(event) {
+          console.dir(event);
+          event.preventDefault();
+          socket.emit('motionRequest', {id: $(this).attr('rel')});
+        });
+
         setUpMap(bots, photos);
       }
     );
