@@ -55,11 +55,11 @@ $(document).ready(function () {
           photos.push(p);
           console.log("URI: " + p.getUri());
           // TODO make this configurable
-          var img = '<a href="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
+          var img = '<a id="'+p.getUri()+'" href="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
                     p.getUri() + '" data-lightbox="markbot" data-title="' + p.getLastMod() + '">';
           img += '<div class="image-wrapper col-xs-2">';
           img += '<img src="http://'+config.dashboard.host+':'+config.dashboard.port+'/api/photo?uri=' +
-                    p.getUri() + '" id="'+p.getUri()+'" class="img-thumbnail" />';
+                    p.getUri() + '" class="img-thumbnail" />';
           img += '</div>';
           img += '</a>';
           $('#result').append(img);
