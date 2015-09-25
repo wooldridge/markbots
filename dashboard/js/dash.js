@@ -140,8 +140,28 @@ $(document).ready(function () {
 
     var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-    var rectangle = new APP.Rectangle(map);
-    rectangle.show();
+
+    // RECTANGLE CONTROL
+    // get existing coords (if present)
+    var coords = {
+      lat1: $('form #lat1').val(),
+      lon1: $('form #lon1').val(),
+      lat2: $('form #lat2').val(),
+      lon2: $('form #lon2').val()
+    }
+    // set up rectangle
+    var rectangle = new APP.Rectangle(map, coords);
+    // show or hide depending on control
+    if ($('#rect').val() === 'true') {
+      rectangle.show();
+    } else {
+      rectangle.hide();
+      $('form #lat1').disabled = true;
+      $('form #lon1').disabled = true;
+      $('form #lat2').disabled = true;
+      $('form #lon2').disabled = true;
+    }
+    // handle resize events
     rectangle.setListener(function (event) {
       var coords = rectangle.getCoords();
       console.dir(coords);
@@ -150,6 +170,31 @@ $(document).ready(function () {
       $('form #lat2').val(coords.lat2);
       $('form #lon2').val(coords.lon2);
     });
+    // handle control events
+    $('#rect').on( "change", function () {
+      if ($('#rect').val() === 'true') {
+        $('form #lat1').disabled = false;
+        $('form #lon1').disabled = false;
+        $('form #lat2').disabled = false;
+        $('form #lon2').disabled = false;
+      } else {
+        $('form #lat1').disabled = true;
+        $('form #lon1').disabled = true;
+        $('form #lat2').disabled = true;
+        $('form #lon2').disabled = true;
+        $('form #lat1').val('');
+        $('form #lon1').val('');
+        $('form #lat2').val('');
+        $('form #lon2').val('');
+        getBots();
+      }
+    });
+
+    // handle update button events
+    $('#update').on( "click", function () {
+        getBots();
+      }
+    );
 
     coordsForLine = {};
     photos.forEach(function(photo) {

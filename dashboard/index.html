@@ -30,7 +30,7 @@
 
         <form>
 
-          <div class="input-group-wrapper col-sm-4">
+          <div class="input-group-wrapper col-sm-3">
             <div class="input-daterange input-group" id="datepicker">
               <input type="text" class="input-sm form-control" name="min" placeholder="Start Date" />
               <span class="input-group-addon">to</span>
@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div class="input-group-wrapper col-sm-3">
+          <div class="input-group-wrapper col-sm-2">
             <select name="tr" id="trigger" class="form-control input-sm">
               <option value="">All Methods</option>
               <option value="motion">Motion</option>
@@ -46,7 +46,7 @@
             </select>
           </div>
 
-          <div class="input-group-wrapper col-sm-3">
+          <div class="input-group-wrapper col-sm-2">
             <select name="id" id="botId" class="form-control input-sm">
               <option value="">All Bots</option>
               <option value="markbot1">markbot1</option>
@@ -63,6 +63,17 @@
               <option value="180">180 Photos</option>
               <option value="360">360 Photos</option>
             </select>
+          </div>
+
+          <div class="input-group-wrapper col-sm-2">
+            <select name="rect" id="rect" class="form-control input-sm" >
+              <option value="false">Hide Box</option>
+              <option value="true">Show Box</option>
+            </select>
+          </div>
+
+          <div class="input-group-wrapper col-sm-1">
+            <input type="button" id="update" name="update" value="Update" class="input-sm form-control" />
           </div>
 
           <!-- geolocation data -->

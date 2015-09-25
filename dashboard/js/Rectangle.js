@@ -5,7 +5,7 @@ var APP = APP || {};
  * @constructor
  * @param data A data object.
  */
-APP.Rectangle = function (map) {
+APP.Rectangle = function (map, coords) {
   'use strict';
       // properties
   var rectangle,
@@ -29,10 +29,10 @@ APP.Rectangle = function (map) {
   map = map || {};
 
   center = map.getCenter();
-  lat1 = center.lat() + config.map.rectangle.lat1;
-  lon1 = center.lng() + config.map.rectangle.lon1;
-  lat2 = center.lat() + config.map.rectangle.lat2;
-  lon2 = center.lng() + config.map.rectangle.lon2;
+  lat1 = coords.lat2 || center.lat() + config.map.rectangle.lat1;
+  lon1 = coords.lon2 || center.lng() + config.map.rectangle.lon1;
+  lat2 = coords.lat1 || center.lat() + config.map.rectangle.lat2;
+  lon2 = coords.lon1 || center.lng() + config.map.rectangle.lon2;
 
   var bounds = new google.maps.LatLngBounds(
       new google.maps.LatLng(lat1, lon1),
