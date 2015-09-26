@@ -44,7 +44,7 @@ socket.on('capture', function(data){
 });
 socket.on('motion', function(data){
   console.log('motion received');
-  socket.emit('emitting msg', {foo: 'bar'});
+  socket.emit('motionUpdate', {foo: 'bar'});
   console.dir(data);
   // if ID is this bot, toggle motion
   if (data.id === config.bot.id) {
