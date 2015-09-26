@@ -222,4 +222,9 @@ io.sockets.on('connection', function (socket) {
     console.dir(data);
     io.sockets.emit('motion', data);
   });
+  socket.on('motionUpdate', function (data) {
+    console.log('motionUpdate');
+    console.dir(data);
+    io.sockets.emit('motionUpdate', data);
+  });
 });
