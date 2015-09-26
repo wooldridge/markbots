@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-  var min = '',
+  var map,
+      min = '',
       max = '',
       botsToColors = {},
       userCoords = {},
@@ -152,7 +153,15 @@ $(document).ready(function () {
       count++;
     }
 
-    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    // if map is drawn, maintain zoom and center
+    if (map) {
+      mapOptions.zoom = map.getZoom();
+      var centerCoords = map.getCenter();
+      mapOptions.center.lat = centerCoords.lat();
+      mapOptions.center.lng = centerCoords.lng();
+    }
+
+    map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
 
     // RECTANGLE CONTROL
@@ -219,6 +228,12 @@ $(document).ready(function () {
     photos.forEach(function(photo) {
       var coords = photo.getCoords();
       if (coords.lat && coords.lon) {
+        var icon = {
+          url: 'images/'+photo.getBotId()+'.png',
+          size: new google.maps.Size(32, 32),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(16, 16)
+        };
         var marker = new google.maps.Marker({
           map: map,
           position: {
@@ -226,7 +241,8 @@ $(document).ready(function () {
             lng: coords.lon
           },
           title: photo.getUri(),
-          icon: 'images/'+photo.getBotId()+'.png'
+          icon: icon,
+          anchorPoint: new google.maps.Point(8, 8)
         });
         if (coordsForLine[photo.getBotId()]) {
           coordsForLine[photo.getBotId()].push({lat: coords.lat, lng: coords.lon});
