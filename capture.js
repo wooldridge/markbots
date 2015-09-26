@@ -50,6 +50,7 @@ socket.on('motion', function(data){
     trigger = 'socket'
     motionFlag = !motionFlag;
     saveBot();
+    io.sockets.emit('motionUpdate', {id: config.bot.id});
   }
 });
 

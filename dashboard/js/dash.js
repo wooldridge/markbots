@@ -297,6 +297,10 @@ $(document).ready(function () {
   var socket = io.connect('http://' + config.dashboard.host +
                         ':' + config.dashboard.port);
 
+  socket.on('motionUpdate', function (data) {
+    console.log('motionUpdate: ' + data.id);
+  });
+
 //  https://gist.github.com/elidupuis/1468937
 //  format an ISO date using Moment.js
 //  http://momentjs.com/
