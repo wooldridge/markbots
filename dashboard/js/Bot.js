@@ -60,7 +60,7 @@ APP.Bot = function (data) {
   }
   photos = [],
   nearby = []
-  nearbyThreshold = 100; // in meters
+  nearbyThreshold = 2; // in meters
 
  /**
   * Get ID.
