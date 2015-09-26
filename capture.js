@@ -49,7 +49,7 @@ socket.on('motion', function(data){
   if (data.id === config.bot.id) {
     trigger = 'socket'
     motionFlag = !motionFlag;
-    socket.emit('motionUpdate', {data: config.bot.id});
+    socket.emit('motionUpdate', {id: config.bot.id});
     saveBot();
   }
 });
