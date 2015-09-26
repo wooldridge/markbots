@@ -309,6 +309,15 @@ $(document).ready(function () {
     console.log('captureUpdate: ' + data.uri);
     console.dir(data);
     // TODO
+    var html = '<a id="' + data.uri + '"' +
+      'href="http://' + config.dashboard.host + ':' + config.dashboard.port +
+      '/api/photo?uri=' + data.uri + '" ' +
+      'data-lightbox="markbot" data-title="">' +
+      '<div class="image-wrapper col-xs-2">' +
+      '<img src="http://' + config.dashboard.host + ':' + config.dashboard.port +
+      '/api/photo?uri=' + data.uri + ' ' +
+      'class="img-thumbnail" /></div></a>';
+    $("#photos").prepend(html);
   });
 
 //  https://gist.github.com/elidupuis/1468937
