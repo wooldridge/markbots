@@ -298,10 +298,17 @@ $(document).ready(function () {
                         ':' + config.dashboard.port);
 
   socket.on('motionUpdate', function (data) {
-    console.log('motionUpdate: ' + data.id);
+    console.log('motionUpdate');
+    onsole.dir(data);
     $('.summary-action-move a[rel="'+data.id+'"]').html(
       data.status ? 'On' : 'Off'
     );
+  });
+
+  socket.on('captureUpdate', function (data) {
+    console.log('captureUpdate: ' + data.uri);
+    console.dir(data);
+    // TODO
   });
 
 //  https://gist.github.com/elidupuis/1468937

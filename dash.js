@@ -217,6 +217,11 @@ io.sockets.on('connection', function (socket) {
     console.dir(data);
     io.sockets.emit('capture', data);
   });
+  socket.on('captureUpdate', function (data) {
+    console.log('captureUpdate');
+    console.dir(data);
+    io.sockets.emit('captureUpdate', data);
+  });
   socket.on('motionRequest', function (data) {
     console.log('motionRequest');
     console.dir(data);
