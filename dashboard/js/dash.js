@@ -299,7 +299,7 @@ $(document).ready(function () {
 
   socket.on('motionUpdate', function (data) {
     console.log('motionUpdate');
-    onsole.dir(data);
+    console.dir(data);
     $('.summary-action-move a[rel="'+data.id+'"]').html(
       data.status ? 'On' : 'Off'
     );
