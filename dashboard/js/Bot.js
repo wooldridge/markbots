@@ -190,7 +190,7 @@ APP.Bot = function (data) {
       status: isOnline(),
       mot: mot,
       numPhotos: getPhotos().length,
-      nearby: getNearby().length
+      nearby: getNearby()
     }
     return json;
   };

@@ -92,9 +92,9 @@ $(document).ready(function () {
           // set nearby status
           b.setNearby(bots);
           // Only push if bot has images
-          if (b.getPhotos().length > 0) {
+          //if (b.getPhotos().length > 0) {
             botsJson.push(b.getAsJson());
-          }
+          //}
         });
 
         json = {bots: botsJson};
@@ -305,17 +305,29 @@ Handlebars.registerHelper('dateFormat', function(context, block) {
 });
 
 Handlebars.registerHelper("everyOther", function (index, amount, scope) {
-    if ( ++index % amount)
-        return scope.inverse(this);
-    else
-        return scope.fn(this);
+  if ( ++index % amount)
+    return scope.inverse(this);
+  else
+    return scope.fn(this);
 });
 
 Handlebars.registerHelper("toPrecision", function (num, prec) {
-    if (num && prec)
-        return num.toPrecision(prec);
-    else
-        return num;
+  if (num && prec)
+    return num.toPrecision(prec);
+  else
+    return num;
+});
+
+Handlebars.registerHelper("nearbyBots", function (bots) {
+  var result = 'None'
+  if (bots.length > 0) {
+    var ids = [];
+    bots.forEach(function(id) {
+      ids.push(id);
+    });
+    result = ids.join(',');
+  }
+  return result;
 });
 
   getBots();
