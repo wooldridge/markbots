@@ -18,6 +18,8 @@ APP.Bot = function (data) {
       lastCap,
       color,
       mot,
+      nearby,
+      nearbyThreshold,
 
       // methods
       getId,
@@ -31,7 +33,11 @@ APP.Bot = function (data) {
       setColor,
       getColor,
       getMotion,
-      getAsJson;
+      setNearby,
+      getNearby,
+      getAsJson,
+      getDistBetwPoints,
+      deg2rad;
 
   // initialize properties
   data = data || {};
@@ -52,7 +58,9 @@ APP.Bot = function (data) {
   } else {
     mot = null;
   }
-  photos = [];
+  photos = [],
+  nearby = []
+  nearbyThreshold = 100; // in meters
 
  /**
   * Get ID.
@@ -142,6 +150,33 @@ APP.Bot = function (data) {
   };
 
  /**
+  * Set nearby status based on array of bots.
+  */
+  setNearby = function (bots) {
+    nearby = [];
+    // don't check if this bot has not lat/lon
+    if (lat && lon) {
+      bots.forEach(function(b) {
+        var coords = b.getCoords();
+        // bot to check must have lat/lon, not be same
+        if (coords.lat && coords.lon && (b.getId() !== id)) {
+          var dist = getDistBetwPoints(lat, lon, coords.lat, coords.lon);
+          if ((dist * 1000) < nearbyThreshold) {
+            nearby.push(b.getId());
+          }
+        }
+      });
+    }
+  };
+
+ /**
+  * Get nearby status .
+  */
+  getNearby = function () {
+    return nearby;
+  };
+
+ /**
   * Get as a JSON representation (for templating).
   */
   getAsJson = function () {
@@ -154,9 +189,31 @@ APP.Bot = function (data) {
       lastCap: lastCap,
       status: isOnline(),
       mot: mot,
-      numPhotos: getPhotos().length
+      numPhotos: getPhotos().length,
+      nearby: getNearby().length
     }
     return json;
+  };
+
+  getDistBetwPoints = function (lat1,lon1,lat2,lon2) {
+    if (!lat1 || !lon1 || !lat2 || !lon2) {
+      throw new Error("Missing lat/lon param(s)");
+    }
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1);
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+      ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  };
+
+  deg2rad = function (deg) {
+    return deg * (Math.PI/180);
   };
 
   // Public API
@@ -172,6 +229,8 @@ APP.Bot = function (data) {
     setColor: setColor,
     getColor: getColor,
     getMotion: getMotion,
+    setNearby: setNearby,
+    getNearby: getNearby,
     getAsJson: getAsJson
   };
 

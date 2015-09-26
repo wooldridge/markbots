@@ -89,9 +89,8 @@ $(document).ready(function () {
         // Set up table
         var botsJson = [];
         bots.forEach(function(b) {
-          var coords = b.getCoords();
-          var row = '<tr><td>'+b.getId()+'</td><td>'+coords.lat+'</td><td>'+coords.lon+'</td><td>'+b.getLastCap()+'</td><td>'+(b.isOnline() ? 'Online' : 'Offline')+'</td><td>'+(b.getMotion() ? 'On' : 'Off')+'</td><td><input type="button" name="'+b.getId()+'" value="capture" /> <input type="button" name="'+b.getId()+'" value="motion" /></td></tr>';
-          //$('#summary').append(row);
+          // set nearby status
+          b.setNearby(bots);
           // Only push if bot has images
           if (b.getPhotos().length > 0) {
             botsJson.push(b.getAsJson());
@@ -325,6 +324,32 @@ Handlebars.registerHelper("toPrecision", function (num, prec) {
   // http://blog.stchur.com/2010/01/15/programmatically-clicking-a-link-in-javascript/
   // To activat lightbox link on marker click. Not sure if all browsers support this.
   function actuateLink(link) {
+     var allowDefaultAction = true;
+     if (link.click) {
+        link.click();
+        return;
+     }
+     else if (document.createEvent) {
+        var e = document.createEvent('MouseEvents');
+        e.initEvent(
+           'click'     // event type
+           ,true      // can bubble?
+           ,true      // cancelable?
+        );
+        allowDefaultAction = link.dispatchEvent(e);
+     }
+
+     if (allowDefaultAction) {
+        var f = document.createElement('form');
+        f.action = link.href;
+        document.body.appendChild(f);
+        f.submit();
+     }
+  }
+
+
+  // Check if a bot has nearby bots
+  function hasNearby() {
      var allowDefaultAction = true;
      if (link.click) {
         link.click();
