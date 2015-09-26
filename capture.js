@@ -227,7 +227,7 @@ var savePhoto = function (buffer) {
       response.documents.forEach( function(document) {
         console.log('  ' + document.uri);
       });
-      socket.emit('captureUpdate', {properties});
+      socket.emit('captureUpdate', properties);
     },
     function(error) {
       console.log(JSON.stringify(error, null, 2));
