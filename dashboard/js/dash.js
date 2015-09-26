@@ -312,6 +312,13 @@ Handlebars.registerHelper("everyOther", function (index, amount, scope) {
         return scope.fn(this);
 });
 
+Handlebars.registerHelper("toPrecision", function (num, prec) {
+    if (num && prec)
+        return num.toPrecision(prec);
+    else
+        return num;
+});
+
   getBots();
 
 

@@ -103,6 +103,7 @@
               <th class="text-center">Longitude</th>
               <th class="text-center">Last Activity</th>
               <th class="text-center">Online</th>
+              <th class="text-center">Nearby</th>
               <th class="text-center">Motion</th>
               <th class="text-center">Capture</th>
             </tr>
@@ -117,11 +118,14 @@
                 <!-- <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td> -->
                 <td class="summary-name">{{id}}</td>
                 <td class="text-center">{{numPhotos}}</td>
-                <td class="text-center">{{lat}}</td>
-                <td class="text-center">{{lon}}</td>
+                <td class="text-center">{{toPrecision lat 8}}</td>
+                <td class="text-center">{{toPrecision lon 8}}</td>
                 <td class="text-center">{{dateFormat lastMod format="MM/DD/YYYY HH:mm:ss"}}</td>
                 <td class="text-center">
                   {{#if status}}Yes{{else}}No{{/if}}
+                </td>
+                <td class="text-center">
+                  TBD
                 </td>
                 <td class="text-center summary-action-move">
                   <a href="#" rel="{{id}}">{{#if mot}}On{{else}}Off{{/if}}</a>
@@ -147,7 +151,7 @@
 
       <script id="photo-template" type="text/x-handlebars-template">
         {{#photos}}
-          <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}}" data-lightbox="markbot" data-title="{{lastMod}} ({{lat}}, {{lon}})">
+          <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}}" data-lightbox="markbot" data-title="{{lastMod}} ({{toPrecision lat 8}}, {{toPrecision lon 8}})">
             <div class="image-wrapper col-xs-2">
               <img src="http://{{host}}:{{port}}/api/photo?uri={{uri}}" class="img-thumbnail" />
             </div>
