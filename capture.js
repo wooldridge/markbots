@@ -283,4 +283,5 @@ var saveBot = function () {
   );
 };
 
+saveBot();
 setInterval(saveBot, config.bot.heartbeat, 'foo');
