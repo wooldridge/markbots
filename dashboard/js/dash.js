@@ -299,6 +299,9 @@ $(document).ready(function () {
 
   socket.on('motionUpdate', function (data) {
     console.log('motionUpdate: ' + data.id);
+    $('.summary-action-move a[rel="'+data.id+'"]').html(
+      data.status==='true' ? 'On' : 'Off'
+    );
   });
 
 //  https://gist.github.com/elidupuis/1468937
