@@ -10,9 +10,16 @@ $(document).ready(function () {
         marbot1: '#be1e2d',
         markbot2: '#1b68b3',
         markbot3: '#1d9072'
-      };
+      },
+      getBotsFlag = false,
+      getPhotosFlag = false;
 
   function getBots() {
+    // don't have more than one getBots() going at once
+    if (getBotsFlag) {
+      return;
+    }
+    getBotsFlag = true;
     // TODO make this configurable
     var str = $('form').serialize();
     bots = [];
@@ -38,11 +45,17 @@ $(document).ready(function () {
         // });
 
         getPhotos(bots);
+        getBotsFlag = false;
       }
     );
   }
 
   function getPhotos(bots) {
+    // don't have more than one getBots() going at once
+    if (getPhotosFlag) {
+      return;
+    }
+    getPhotosFlag = true;
     // TODO make this configurable
     var str = $('form').serialize();
     photos = [];
@@ -108,6 +121,7 @@ $(document).ready(function () {
         });
 
         setUpMap(bots, photos);
+        getPhotosFlag = false;
       }
     );
   }
@@ -192,6 +206,11 @@ $(document).ready(function () {
 
     // handle update button events
     $('#update').on( "click", function () {
+        var coords = rectangle.getCoords();
+        $('form #lat1').val(coords.lat1);
+        $('form #lon1').val(coords.lon1);
+        $('form #lat2').val(coords.lat2);
+        $('form #lon2').val(coords.lon2);
         getBots();
       }
     );
