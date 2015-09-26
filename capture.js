@@ -49,8 +49,9 @@ socket.on('motion', function(data){
   if (data.id === config.bot.id) {
     trigger = 'socket'
     motionFlag = !motionFlag;
-    saveBot();
-    //socket.emit('motionUpdate', {id: config.bot.id});
+    saveBot(function () {
+      socket.emit('motionUpdate', {id: config.bot.id});
+    });
   }
 });
 
@@ -239,7 +240,7 @@ var savePhoto = function (buffer) {
 };
 
 // SAVE BOT HEARTBEAT TO MARKLOGIC
-var saveBot = function () {
+var saveBot = function (callback) {
   var m = new Date();
   dateString =
     m.getFullYear() +'-'+
@@ -276,6 +277,9 @@ var saveBot = function () {
       //        config.marklogic.port + '/v1/documents?uri=' +
       //        dateString + '.jpg'
       // });
+      if (callback) {
+        callback();
+      }
     },
     function(error) {
       console.log(JSON.stringify(error, null, 2));
