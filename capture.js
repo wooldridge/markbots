@@ -39,7 +39,7 @@ socket.on('capture', function(data){
   // if ID is this bot, capture photo
   if (data.id === config.bot.id) {
     trigger = 'socket'
-    capturePhoto();
+    capturePhoto(trigger);
   }
 });
 socket.on('motion', function(data){
@@ -137,7 +137,7 @@ board.on('ready', function () {
     console.log('motionFlag: ' + motionFlag);
     if (motionFlag === true) {
       trigger = 'motion';
-      capturePhoto();
+      capturePhoto(trigger);
     }
   });
 
@@ -186,7 +186,7 @@ board.on('ready', function () {
 // });
 
 // CAPTURE PHOTO
-var capturePhoto = function () {
+var capturePhoto = function (trigger) {
   var m = new Date();
   dateString =
     m.getFullYear() +'-'+
@@ -197,8 +197,14 @@ var capturePhoto = function () {
     ('0' + m.getSeconds()).slice(-2);
 
   output = './photos/' + dateString + '.jpg';
-
   camera.set('output', output);
+
+  // capture with no delay for socket triggers
+  if (trigger === 'socket') {
+    camera.set('timeout', 0);
+  } else {
+    camera.set('timeout', config.raspicam.timeout);
+  }
 
   camera.start();
 };
