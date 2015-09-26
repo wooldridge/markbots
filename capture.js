@@ -201,7 +201,7 @@ var capturePhoto = function (trigger) {
 
   // capture with no delay for socket triggers
   if (trigger === 'socket') {
-    camera.set('timeout', 0);
+    camera.set('timeout', 1);
   } else {
     camera.set('timeout', config.raspicam.timeout);
   }
