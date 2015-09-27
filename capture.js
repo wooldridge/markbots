@@ -72,7 +72,7 @@ killall.on('error', function (err) {
 });
 var daemon = new gpsd.Daemon();
 
-// SOCET.IO events
+// SOCKET.IO events
 socket.on('connect', function(){
   console.log('connected');
 });
@@ -80,7 +80,7 @@ socket.on('capture', function(data){
   console.log('capture received');
   console.dir(data);
   // if ID is this bot and multi not on, capture photo
-  if (data.id === config.bot.id && intId !== '') {
+  if (data.id === config.bot.id && intId === '') {
     trigger = 'single';
     capturePhoto(trigger);
   }
@@ -91,8 +91,9 @@ socket.on('multi', function(data){
   // if ID is this bot, start timelapse
   if (data.id === config.bot.id) {
     if (intId === '') {
+      capturePhoto('multi');
       intId = setInterval(function () {
-        capturePhoto('multi'); // trigger is 'multi'
+        capturePhoto('multi');
       }, 10000, 'foo');
     } else {
       clearInterval(intId);
