@@ -30,29 +30,8 @@ app.use(express.static(__dirname + '/'));
 var socket = require('socket.io-client')(
   'http://'+config.dashboard.host+':'+config.dashboard.port
 );
-socket.on('connect', function(){
-  console.log('connected');
-});
-socket.on('capture', function(data){
-  console.log('capture received');
-  console.dir(data);
-  // if ID is this bot, capture photo
-  if (data.id === config.bot.id) {
-    trigger = 'socket'
-    capturePhoto(trigger);
-  }
-});
-socket.on('motion', function(data){
-  console.log('motion received');
-  console.dir(data);
-  // if ID is this bot, toggle motion
-  if (data.id === config.bot.id) {
-    trigger = 'socket'
-    motionFlag = !motionFlag;
-    socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
-    saveBot();
-  }
-});
+var intPause = 10000;
+var intId = '';
 
 // Set up MOTION/LED
 var motionFlag = true;
@@ -92,6 +71,45 @@ killall.on('error', function (err) {
   console.log('kill existing gps, failed to start child process: ' + err);
 });
 var daemon = new gpsd.Daemon();
+
+// SOCET.IO events
+socket.on('connect', function(){
+  console.log('connected');
+});
+socket.on('capture', function(data){
+  console.log('capture received');
+  console.dir(data);
+  // if ID is this bot and multi not on, capture photo
+  if (data.id === config.bot.id && intId !== '') {
+    trigger = 'single';
+    capturePhoto(trigger);
+  }
+});
+socket.on('multi', function(data){
+  console.log('multi received');
+  console.dir(data);
+  // if ID is this bot, start timelapse
+  if (data.id === config.bot.id) {
+    if (intId === '') {
+      trigger = 'multi';
+      intId = setInterval(capturePhoto(trigger), 10000, 'foo');
+    } else {
+      clearInterval(intId);
+      intId = '';
+    }
+  }
+});
+socket.on('motion', function(data){
+  console.log('motion received');
+  console.dir(data);
+  // if ID is this bot, toggle motion
+  if (data.id === config.bot.id) {
+    trigger = 'socket';
+    motionFlag = !motionFlag;
+    socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
+    saveBot();
+  }
+});
 
 // CAMERA events
 camera.on('start', function(err, timestamp){
@@ -146,51 +164,14 @@ board.on('ready', function () {
     console.log('motionend');
   });
 
-  var led = new five.Led("P1-13");
+  // http://johnny-five.io/examples/raspi-io/
+  // var led = new five.Led("P1-13");
 
   if (ledFlag) {
-    led.blink();
+    // led.blink(); // not working
   }
 
 });
-
-// SOCKET.IO events
-// io.sockets.on('connection', function (socket) {
-//   socket.emit('message', { message: 'socket.io connection' });
-//   socket.on('getPhoto', function (data) {
-//     console.log('photo event');
-//     trigger = 'socket';
-//     capturePhoto();
-//   });
-//   socket.on('getGps', function (data) {
-//     console.log('gps event');
-//     io.sockets.emit('gps', {coords: 'lat: ' + gps.lat + ' lon: ' + gps.lon});
-//   });
-//   socket.on('toggleMotion', function (data) {
-//     console.log('toggle motion event');
-//     motionFlag = !motionFlag;
-//     io.sockets.emit('motion', {value: motionFlag});
-//   });
-//   socket.on('resetGps', function (data) {
-//     console.log('gps reset');
-//     // sudo killall gpsd
-//     var killall = spawn('sudo', ['killall', 'gpsd']);
-//   	killall.on('close', function (code) {
-//       console.log('child process exited with code: ' + code);
-//       // sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
-//       var gpsd = spawn('sudo', ['gpsd', '/dev/ttyUSB0', '-F', '/var/run/gpsd.sock']);
-//   	  gpsd.on('close', function (code) {
-//         console.log('child process exited with code: ' + code);
-//       });
-//   	  gpsd.on('error', function (err) {
-//         console.log('failed to start child process: ' + err);
-//       });
-//     });
-//   	killall.on('error', function (err) {
-//       console.log('failed to start child process: ' + err);
-//     });
-//   });
-// });
 
 // CAPTURE PHOTO
 var capturePhoto = function (trigger) {

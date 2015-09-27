@@ -120,11 +120,18 @@ $(document).ready(function () {
           socket.emit('motionRequest', {id: $(this).attr('rel')});
         });
 
-        // Click capture in table
-        $('.summary-action-capture a').on('click', function(event) {
+        // Click single capture in table
+        $('.summary-action-capture a.single').on('click', function(event) {
           console.dir(event);
           event.preventDefault();
           socket.emit('captureRequest', {id: $(this).attr('rel')});
+        });
+
+        // Click single capture in table
+        $('.summary-action-capture a.multi').on('click', function(event) {
+          console.dir(event);
+          event.preventDefault();
+          socket.emit('multiRequest', {id: $(this).attr('rel')});
         });
 
         setUpMap(bots, photos);
