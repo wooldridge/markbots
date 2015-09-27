@@ -82,7 +82,7 @@ $(document).ready(function () {
 
         json = {photos: photosJson};
 
-        var source = $("#photo-template").html();
+        var source = $("#photos-template").html();
         var template = Handlebars.compile(source);
         $("#photos").html('').append(template(json));
 
@@ -309,15 +309,15 @@ $(document).ready(function () {
     console.log('captureUpdate: ' + data.uri);
     console.dir(data);
     // TODO
-    var html = '<a id="' + data.uri + '" ' +
-      'href="http://' + config.dashboard.host + ':' + config.dashboard.port +
-      '/api/photo?uri=' + data.uri + '" ' +
-      'data-lightbox="markbot" data-title="">' +
-      '<div class="image-wrapper col-xs-2">' +
-      '<img src="http://' + config.dashboard.host + ':' + config.dashboard.port +
-      '/api/photo?uri=' + data.uri + '" ' +
-      'class="img-thumbnail" /></div></a>';
-    $("#photos").prepend(html);
+    var json = {
+      host: options.dashboard.host,
+      port: options.dashboard.port,
+      uri: data.uri
+    };
+
+    var source = $("#photo-template").html();
+    var template = Handlebars.compile(source);
+    $("#photos").prepend(template(json));
   });
 
 //  https://gist.github.com/elidupuis/1468937

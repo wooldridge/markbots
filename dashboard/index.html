@@ -149,7 +149,8 @@
 
     <section class="row">
 
-      <script id="photo-template" type="text/x-handlebars-template">
+      <!-- for list of photos to append -->
+      <script id="photos-template" type="text/x-handlebars-template">
         {{#photos}}
           <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}}" data-lightbox="markbot" data-title="{{botId}} {{lastMod}} ({{toPrecision lat 8}}, {{toPrecision lon 8}})">
             <div class="image-wrapper col-xs-2">
@@ -157,6 +158,15 @@
             </div>
           </a>
         {{/photos}}
+      </script>
+
+      <!-- for single photo to prepend -->
+      <script id="photo-template" type="text/x-handlebars-template">
+        <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}} data-lightbox="markbot" data-title="">
+          <div class="image-wrapper col-xs-2">
+            <img src="http://{{host}}:{{port}}/api/photo?uri={{uri}}" class="img-thumbnail" />
+          </div>
+        </a>
       </script>
 
       <div id="photos" class="col-xs-12"></div>
