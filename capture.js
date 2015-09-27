@@ -91,8 +91,9 @@ socket.on('multi', function(data){
   // if ID is this bot, start timelapse
   if (data.id === config.bot.id) {
     if (intId === '') {
-      trigger = 'multi';
-      intId = setInterval(capturePhoto(trigger), 10000, 'foo');
+      intId = setInterval(function () {
+        capturePhoto('multi'); // trigger is 'multi'
+      }, 10000, 'foo');
     } else {
       clearInterval(intId);
       intId = '';
@@ -165,10 +166,10 @@ board.on('ready', function () {
   });
 
   // http://johnny-five.io/examples/raspi-io/
-  // var led = new five.Led("P1-13");
+  var led = new five.Led("P1-13");
 
   if (ledFlag) {
-    // led.blink(); // not working
+    led.blink(); // not working?
   }
 
 });
