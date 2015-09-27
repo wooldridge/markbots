@@ -310,8 +310,8 @@ $(document).ready(function () {
     console.dir(data);
     // TODO
     var json = {
-      host: options.dashboard.host,
-      port: options.dashboard.port,
+      host: config.dashboard.host,
+      port: config.dashboard.port,
       uri: data.uri
     };
 
