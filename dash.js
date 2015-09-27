@@ -217,11 +217,6 @@ io.sockets.on('connection', function (socket) {
     console.dir(data);
     io.sockets.emit('capture', data);
   });
-  socket.on('captureUpdate', function (data) {
-    console.log('captureUpdate');
-    console.dir(data);
-    io.sockets.emit('captureUpdate', data);
-  });
   socket.on('multiRequest', function (data) {
     console.log('multiRequest');
     console.dir(data);
