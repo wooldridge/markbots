@@ -54,8 +54,9 @@ socket.on('motion', function(data){
   }
 });
 
-// Set up MOTION
+// Set up MOTION/LED
 var motionFlag = true;
+var ledFlag = true;
 var board = new five.Board({
     io: new raspi()
 });
@@ -122,7 +123,7 @@ daemon.start(function() {
   });
 });
 
-// MOTION events
+// MOTION/LED events
 board.on('ready', function () {
   console.log('board is ready');
 
@@ -144,6 +145,12 @@ board.on('ready', function () {
   motion.on('motionend', function () {
     console.log('motionend');
   });
+
+  var led = new five.Led("P1-13");
+
+  if (ledFlag) {
+    led.blink();
+  }
 
 });
 
