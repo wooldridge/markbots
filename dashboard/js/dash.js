@@ -357,7 +357,8 @@ $(document).ready(function () {
 Handlebars.registerHelper('dateFormat', function(context, block) {
   if (window.moment) {
     var f = block.hash.format || "MMM Do, YYYY";
-    return moment(Date(context)).format(f);
+    var d = new Date(context);
+    return moment(d).format(f);
   }else{
     return context;   //  moment plugin not available. return data as is.
   };

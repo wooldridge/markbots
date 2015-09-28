@@ -23,6 +23,8 @@ APP.Bot = function (data) {
 
       // methods
       getId,
+      getLat,
+      getLon,
       getCoords,
       getIp,
       getLastMod,
@@ -70,10 +72,24 @@ APP.Bot = function (data) {
   };
 
  /**
+  * Get latitude.
+  */
+  getLat = function () {
+    return lat;
+  };
+
+ /**
+  * Get longitude.
+  */
+  getLon = function () {
+    return lon;
+  };
+
+ /**
   * Get GPS coordinates.
   */
   getCoords = function () {
-    return {lat: lat, lon: lon};
+    return {lat: getLat(), lon: getLon()};
   };
 
  /**
@@ -124,6 +140,12 @@ APP.Bot = function (data) {
     // If photo added is most recent photo, set last-captured property
     if (lastCap === '' || lastCap.getTime() < photoLastMod) {
       lastCap = photo.getLastMod() || lastCap;
+    }
+    // if bot doesn't have lat/lon and photo does, use the photo's lat/lon
+    var coords = photo.getCoords();
+    if ((lat === null || lon === null) && (coords.lat !== null || coords.lon !== null)) {
+      lat = coords.lat;
+      lon = coords.lon;
     }
     photos.push(photo);
   };
@@ -182,8 +204,8 @@ APP.Bot = function (data) {
   getAsJson = function () {
     var json = {
       id: id,
-      lat: lat,
-      lon: lon,
+      lat: getLat(),
+      lon: getLon(),
       ip: ip,
       lastMod: lastMod,
       lastCap: lastCap,
