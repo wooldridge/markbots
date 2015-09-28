@@ -303,7 +303,7 @@ $(document).ready(function () {
       .done(function(data) {
         // uri will have a dot, so use bracketed form
         // http://stackoverflow.com/questions/9930577/jquery-dot-in-id-selector
-        $('a[id=' + uri + ']').remove();
+        $('a[id="' + uri + '"]').remove();
     });
   }
 
