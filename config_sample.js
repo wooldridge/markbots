@@ -12,7 +12,7 @@ config.map = {
     center: {},
     scrollwheel: false,
     streetViewControl: false,
-    zoom: 19
+    zoom: 19,
     zoomControlOptions: {
       style: google.maps.ZoomControlStyle.SMALL,
       position: google.maps.ControlPosition.RIGHT_BOTTOM
