@@ -141,6 +141,7 @@ $(document).ready(function () {
             if (c) {
               deletePhoto($(this).attr('rel'));
               event.stopPropagation();
+              event preventDefault();
             }
           }
         });
