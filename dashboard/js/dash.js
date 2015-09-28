@@ -134,6 +134,17 @@ $(document).ready(function () {
           socket.emit('multiRequest', {id: $(this).attr('rel')});
         });
 
+        $('.img-link').on('click', function(event) {
+          if (event.shiftKey) {
+            var c = confirm("Delete this photo?");
+            console.log(c); //you can just return c because it will be true or false
+            if (c) {
+              deletePhoto($(this).attr('rel'));
+              event.stopPropagation();
+            }
+          }
+        });
+
         setUpMap(bots, photos);
         getPhotosFlag = false;
       }
@@ -284,6 +295,13 @@ $(document).ready(function () {
       }
     });
 
+  }
+
+  function deletePhoto(uri) {
+    $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/delete?uri' + uri)
+      .done(function(data) {
+        $('#' + uri + ' .img-link').remove();
+    });
   }
 
   // Set up filters

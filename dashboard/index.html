@@ -153,7 +153,7 @@
       <!-- for list of photos to append -->
       <script id="photos-template" type="text/x-handlebars-template">
         {{#photos}}
-          <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}}" data-lightbox="markbot" data-title="{{botId}} {{lastMod}} ({{toPrecision lat 8}}, {{toPrecision lon 8}})">
+          <a id="{{uri}}" class="img-link" href="http://{{host}}:{{port}}/api/photo?uri={{uri}}" data-lightbox="markbot" data-title="{{botId}} {{lastMod}} ({{toPrecision lat 8}}, {{toPrecision lon 8}})">
             <div class="image-wrapper col-xs-2">
               <img src="http://{{host}}:{{port}}/api/photo?uri={{uri}}" class="img-thumbnail" />
             </div>
@@ -163,7 +163,7 @@
 
       <!-- for single photo to prepend -->
       <script id="photo-template" type="text/x-handlebars-template">
-        <a id="{{uri}}" href="http://{{host}}:{{port}}/api/photo?uri={{uri}} data-lightbox="markbot" data-title="">
+        <a id="{{uri}}" class="img-link" href="http://{{host}}:{{port}}/api/photo?uri={{uri}} data-lightbox="markbot" data-title="">
           <div class="image-wrapper col-xs-2">
             <img src="http://{{host}}:{{port}}/api/photo?uri={{uri}}" class="img-thumbnail" />
           </div>
