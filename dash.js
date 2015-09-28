@@ -237,4 +237,10 @@ io.sockets.on('connection', function (socket) {
     console.dir(data);
     io.sockets.emit('motionUpdate', data);
   });
+  // Handle nearby calcs
+  socket.on('botUpdate', function (data) {
+    console.log('botUpdate');
+    console.dir(data);
+    io.sockets.emit('botUpdate', data);
+  });
 });
