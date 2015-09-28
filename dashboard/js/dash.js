@@ -188,15 +188,17 @@ $(document).ready(function () {
 
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-    mapType = new google.maps.StyledMapType(
-      config.map.styles['midnightCommander'],
-      {
-        map: map,
-        name: 'midnightCommander'
-      }
-    );
+    map.setOptions({styles: config.map.styles['midnightCommander']});
 
-    map.setMapTypeId('midnightCommander');
+    // mapType = new google.maps.StyledMapType(
+    //   config.map.styles['midnightCommander'],
+    //   {
+    //     map: map,
+    //     name: 'midnightCommander'
+    //   }
+    // );
+
+    // map.setMapTypeId('midnightCommander');
 
     // loadMapTypes = function (mapStyleIds) {
     //   $.each(mapStyleIds, function (i, s) {
