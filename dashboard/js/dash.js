@@ -139,7 +139,7 @@ $(document).ready(function () {
             var c = confirm("Delete this photo?");
             console.log(c); //you can just return c because it will be true or false
             if (c) {
-              deletePhoto($(this).attr('rel'));
+              deletePhoto($(this).attr('id'));
               event.stopPropagation();
               event.preventDefault();
             }
