@@ -301,7 +301,7 @@ $(document).ready(function () {
   function deletePhoto(uri) {
     $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/delete?id=' + uri)
       .done(function(data) {
-        $('#' + uri + ' .img-link').remove();
+        $('#' + uri + '.img-link').remove();
     });
   }
 
