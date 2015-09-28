@@ -188,6 +188,33 @@ $(document).ready(function () {
 
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
+    mapType = new google.maps.StyledMapType(
+      config.map.styles['midnightCommander'],
+      {
+        map: map,
+        name: 'midnightCommander'
+      }
+    );
+
+    map.setMapTypeId('midnightCommander');
+
+    // loadMapTypes = function (mapStyleIds) {
+    //   $.each(mapStyleIds, function (i, s) {
+    //     mapType = new google.maps.StyledMapType(
+    //       config.mapStyles.getStyle(s),
+    //       {
+    //         map: map,
+    //         name: s
+    //       }
+    //     );
+    //     map.mapTypes.set(s, mapType);
+    //   });
+    // };
+
+    // setMapType = function (styleId) {
+    //   map.setMapTypeId(styleId);
+    // };
+
 
     // RECTANGLE CONTROL
     // get existing coords (if present)
