@@ -263,12 +263,7 @@ var saveBot = function () {
       response.documents.forEach( function(document) {
         console.log('  ' + document.uri);
       });
-      // io.sockets.emit('photo', {
-      //   filename: dateString + '.jpg',
-      //   url: 'http://' + config.marklogic.host + ':' +
-      //        config.marklogic.port + '/v1/documents?uri=' +
-      //        dateString + '.jpg'
-      // });
+      socket.emit('botUpdate', properties);
     },
     function(error) {
       console.log(JSON.stringify(error, null, 2));
