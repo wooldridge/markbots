@@ -301,7 +301,9 @@ $(document).ready(function () {
   function deletePhoto(uri) {
     $.ajax('http://'+config.dashboard.host+':'+config.dashboard.port+'/api/delete?id=' + uri)
       .done(function(data) {
-        $('#' + uri + '.img-link').remove();
+        // uri will have a dot, so use bracketed form
+        // http://stackoverflow.com/questions/9930577/jquery-dot-in-id-selector
+        $('a[id=' + uri + '].img-link').remove();
     });
   }
 
