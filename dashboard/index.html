@@ -108,7 +108,7 @@
               <th class="text-center">Capture</th>
             </tr>
             {{#bots}}
-              <tr class="summary-row {{id}}">
+              <tr id="row_{{id}}" class="summary-row {{id}}">
                 <!-- <td class="summary-action summary-action-capture"><a href="#" data-toggle="modal" data-target="#snapShotModal" class="snapshot-link"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a></td> -->
                 <td class="summary-action summary-action-capture"><img src="images/{{id}}_sm.png" border="0" /></td>
                 <!-- <td class="summary-action summary-action-move"><a href="#" data-toggle="tooltip" data-placement="bottom" title="Move Bot"><span class="glyphicon glyphicon-move"></span></a></td> -->
@@ -120,8 +120,8 @@
                 <td class="text-center">
                   {{#if status}}Yes{{else}}No{{/if}}
                 </td>
-                <td class="text-center"></td>
-                <td class="text-center summary-action summary-action-setting">
+                <td id="col_nearby" class="text-center"></td>
+                <td class="text-center summary-action summary-action-setting"mark/>
                   <select name="summary-action-setting" class="form-control input-sm" rel="{{id}}">
                     <option value="capture">Single</option>
                     <option value="multi">Multi</option>

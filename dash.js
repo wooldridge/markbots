@@ -238,7 +238,7 @@ router.get('/nearby', function(req, res, next) {
         ); // Distance in km
         if (document.properties.id !== id) {
           var item = { id: document.properties.id, dist: dist };
-          results.push(item)
+          results.push(item);
         }
       });
       console.log("Result count: " + results.length);
