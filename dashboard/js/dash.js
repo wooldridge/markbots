@@ -100,8 +100,9 @@ $(document).ready(function () {
                 console.dir(data);
                 if (data.length > 0) {
                   // for now, assume will be one (since we have two bots)
-                  var dist = data[0].dist.toFixed(2);
-                  $('tr#row_' + b.getId() + ' td#col_nearby').html(dist);
+                  var dist = data[0].dist * 1000; // meters
+                  $('tr#row_' + b.getId() + ' td#marklogic1!
+                    col_nearby').html(dist.toFixed(2) + ' m');
                 }
             });
           }
