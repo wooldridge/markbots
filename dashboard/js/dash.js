@@ -129,18 +129,26 @@ $(document).ready(function () {
           socket.emit('motionRequest', {id: $(this).attr('rel')});
         });
 
-        // Click single capture in table
-        $('.summary-action-capture a.single').on('click', function(event) {
+        // Handle all types of capture toggling
+        $('.capture-toggle').on('click', function(event) {
           console.dir(event);
           event.preventDefault();
-          socket.emit('captureRequest', {id: $(this).attr('rel')});
+          var parent = $(this).parents('.summary-row');
+          var toggleType = parent.find('.summary-action-setting select').val();
+          var toggleSetting = !parent.find('.capture-toggle').hasClass('on');
+          socket.emit(toggleType + 'Request', { id: $(this).attr('rel'), toggle: toggleSetting });
+          if (toggleSetting && toggleType !== 'capture')
+            parent.find('.capture-toggle').addClass('on');
+          else
+            parent.find('.capture-toggle').removeClass('on');
         });
 
-        // Click single capture in table
-        $('.summary-action-capture a.multi').on('click', function(event) {
+        $('.summary-action-setting select').on('change', function(event) {
           console.dir(event);
           event.preventDefault();
-          socket.emit('multiRequest', {id: $(this).attr('rel')});
+          var parent = $(this).parents('.summary-row');
+          parent.find('.capture-toggle').removeClass('on');
+          socket.emit($('.summary-action-setting select[rel="'+data.id+'"]').val() + 'Request', {id: $(this).attr('rel'), toggle: 'off' });
         });
 
         $('.img-link').on('click', function(event) {
@@ -203,7 +211,7 @@ $(document).ready(function () {
           lon1: $('form #lon1').val(),
           lat2: $('form #lat2').val(),
           lon2: $('form #lon2').val()
-        }
+        };
         // set up rectangle
         var rectangle = new APP.Rectangle(map, coords);
         // show or hide depending on control
@@ -336,12 +344,23 @@ $(document).ready(function () {
   var socket = io.connect('http://' + config.dashboard.host +
                         ':' + config.dashboard.port);
 
+  $.each(['motion','capture','multi'],function(val) {
+    socket.on(val + 'Update', function (data) {
+      console.log(val + 'Update');
+      console.dir(data);
+      $('.summary-action-setting select[rel="'+data.id+'"]').val(val);
+      $('.summary-action-capture a[rel="'+data.id+'"]').removeClass('on');
+      $('.summary-action-capture a[rel="'+data.id+'"]').addClass(data.toggle ? 'on' : 'off');
+    });
+  });
+
   socket.on('motionUpdate', function (data) {
     console.log('motionUpdate');
     console.dir(data);
-    $('.summary-action-move a[rel="'+data.id+'"]').html(
-      data.status ? 'On' : 'Off'
-    );
+
+    $('.summary-action-setting select[rel="'+data.id+'"]').val('motion');
+    $('.summary-action-capture a[rel="'+data.id+'"]').removeClass('on');
+    $('.summary-action-capture a[rel="'+data.id+'"]').addClass(data.toggle)
   });
 
   socket.on('captureUpdate', function (data) {
