@@ -153,14 +153,15 @@ $(document).ready(function () {
   }
 
   function setUpMap(bots, photos) {
+
+    var mapOptions = config.map.options;
+
     // Get user GPS coords
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
         // First, set center to user center
         mapOptions.center.lat = position.coords.latitude;
         mapOptions.center.lng = position.coords.longitude;
-
-        var mapOptions = config.map.options;
 
         var count = 0;
         // Second, get GPS coords from first photo that has them, start from most recent
