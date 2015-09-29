@@ -101,32 +101,6 @@ socket.on('multi', function(data){
     }
   }
 });
-socket.on('motion', function(data){
-  console.log('motion received');
-  console.dir(data);
-  // if ID is this bot, toggle motion
-  if (data.id === config.bot.id) {
-    trigger = 'socket';
-    motionFlag = data.toggle;
-    socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
-    saveBot();
-  }
-});
-socket.on('nearby', function(data){
-  console.log('nearby received');
-  console.dir(data);
-  // if ID is this bot, toggle motion
-  if (data.id === config.bot.id) {
-    trigger = 'socket';
-    ledFlag = data.toggle;
-    if (ledFlag && data.dist !== null) {
-      led.blink(data.dist * 10);
-    } else {
-      led.off();
-    }
-    socket.emit('nearbyUpdate', {id: config.bot.id, status: ledFlag});
-  }
-});
 
 // CAMERA events
 camera.on('start', function(err, timestamp){
@@ -183,6 +157,33 @@ board.on('ready', function () {
 
   // http://johnny-five.io/examples/raspi-io/
   var led = new five.Led("P1-13");
+
+  socket.on('motion', function(data){
+    console.log('motion received');
+    console.dir(data);
+    // if ID is this bot, toggle motion
+    if (data.id === config.bot.id) {
+      trigger = 'socket';
+      motionFlag = data.toggle;
+      socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
+      saveBot();
+    }
+  });
+  socket.on('nearby', function(data){
+    console.log('nearby received');
+    console.dir(data);
+    // if ID is this bot, toggle motion
+    if (data.id === config.bot.id) {
+      trigger = 'socket';
+      ledFlag = data.toggle;
+      if (ledFlag && data.dist !== null) {
+        led.blink(data.dist * 10);
+      } else {
+        led.off();
+      }
+      socket.emit('nearbyUpdate', {id: config.bot.id, status: ledFlag});
+    }
+  });
 
 });
 
