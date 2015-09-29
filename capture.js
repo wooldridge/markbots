@@ -110,6 +110,11 @@ socket.on('motion', function(data){
     motionFlag = data.toggle;
     socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
     saveBot();
+    if (motionFlag) {
+      console.log('motion now off');
+    } else {
+      console.log('motion now on');
+    }
   }
 });
 
