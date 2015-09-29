@@ -192,9 +192,15 @@ router.get('/nearby', function(req, res, next) {
       lon = req.query.lon;
   db.documents.query(
     q.where(
+      q.collection("bots"),
       q.propertiesFragment(
         q.geospatial(
-          q.circle(10, q.latlon(lat, lon))
+          q.geoElementPair(
+            q.qname('http://marklogic.com/xdmp/property', 'properties'),
+            q.qname('http://marklogic.com/xdmp/json/basic', 'lat'),
+            q.qname('http://marklogic.com/xdmp/json/basic', 'lon')
+          ),
+          q.circle(10000, parseFloat(lat), parseFloat(lon))
         )
       )
     )
