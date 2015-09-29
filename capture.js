@@ -177,7 +177,7 @@ board.on('ready', function () {
       trigger = 'socket';
       ledFlag = data.toggle;
       if (ledFlag && data.dist !== null) {
-        led.blink(data.dist * 10);
+        led.blink(data.dist * 1000);
       } else {
         led.off();
       }
