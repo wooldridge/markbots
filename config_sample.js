@@ -3,7 +3,8 @@ var config = {};
 config.bot = {
   id: 'BOT_ID', // e.g., 'markbot1'
   motion: true,
-  heartbeat: 10000 // milliseconds
+  heartbeat: 10000, // milliseconds
+  nearby: 500 // feet
 }
 
 // Google map settings

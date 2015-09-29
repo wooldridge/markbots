@@ -20,6 +20,28 @@ router.use(function(req, res, next) {
   next();
 });
 
+// Geo functions
+var getDistBetwPoints = function (lat1,lon1,lat2,lon2) {
+  if (!lat1 || !lon1 || !lat2 || !lon2) {
+    throw new Error("Missing lat/lon param(s)");
+  }
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2 - lat1);
+  var dLon = deg2rad(lon2 - lon1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c; // Distance in km
+  return d;
+};
+
+var deg2rad = function (deg) {
+  return deg * (Math.PI/180);
+};
+
 // GET photo data
 router.get('/photos', function(req, res, next) {
   // params from URL
@@ -200,7 +222,7 @@ router.get('/nearby', function(req, res, next) {
             q.qname('http://marklogic.com/xdmp/json/basic', 'lat'),
             q.qname('http://marklogic.com/xdmp/json/basic', 'lon')
           ),
-          q.circle(10000, parseFloat(lat), parseFloat(lon))
+          q.circle((1/5280), parseFloat(lat), parseFloat(lon))
         )
       )
     )
@@ -209,7 +231,11 @@ router.get('/nearby', function(req, res, next) {
   .result(function(documents) {
       var results = [];
       documents.forEach(function(document) {
-        results.push(document)
+        var dist = getDistBetwPoints(
+          lat, lon, document.properties.lat, document.properties.lon
+        );
+        var item = { id: document.properties.id, dist: dist };
+        results.push(item)
       });
       console.log("Result count: " + results.length);
       res.json(results);

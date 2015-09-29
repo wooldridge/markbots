@@ -245,10 +245,8 @@ var saveBot = function () {
   var properties = {
     cat: 'bot',
     id: config.bot.id,
-    //lat: gps.lat,
-    //lon: gps.lon,
-    lat: 38.924326667,
-    lon: -77.223943333,
+    lat: gps.lat,
+    lon: gps.lon,
     ts: dateString,
     ip: ip,
     mot: motionFlag
