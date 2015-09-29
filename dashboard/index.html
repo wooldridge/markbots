@@ -104,8 +104,8 @@
               <th class="text-center">Last Activity</th>
               <th class="text-center">Online</th>
               <th class="text-center">Nearby</th>
-              <th class="text-center">Motion</th>
-              <th class="text-center">Capture</th>
+              <th class="text-center">Mode</th>
+              <th class="text-center"></th>
             </tr>
             {{#bots}}
               {{#everyOther @index 2}}
@@ -127,12 +127,15 @@
                 <td class="text-center">
                   {{nearbyBots nearby}}
                 </td>
-                <td class="text-center summary-action-move">
-                  <a href="#" rel="{{id}}">{{#if mot}}On{{else}}Off{{/if}}</a>
+                <td class="text-center summary-action summary-action-setting">
+                  <select name="summary-action-setting" class="form-control input-sm" rel="{{id}}">
+                    <option value="capture">Single</option>
+                    <option value="multi">Multi</option>
+                    <option value="motion">Motion</option>
+                  </select>
                 </td>
-                <td class="summary-action summary-action-capture">
-                  <a href="#" class="single" rel="{{id}}"><span class="glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a>
-                  <a href="#" class="multi" rel="{{id}}">Multi</a>
+                <td class="summary-action-capture">
+                  <a href="#" rel="{{id}}"><span class="capture-toggle glyphicon glyphicon-camera" data-toggle="tooltip" data-placement="bottom" title="Take Picture"></span></a>
                 </td>
               </tr>
             {{/bots}}
