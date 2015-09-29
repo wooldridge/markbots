@@ -229,6 +229,7 @@ router.get('/nearby', function(req, res, next) {
     .withOptions({categories: 'properties'})
   )
   .result(function(documents) {
+      console.dir(documents);
       var results = [];
       documents.forEach(function(document) {
         var dist = getDistBetwPoints(
