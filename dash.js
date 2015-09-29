@@ -311,4 +311,9 @@ io.sockets.on('connection', function (socket) {
     console.dir(data);
     io.sockets.emit('botUpdate', data);
   });
+  socket.on('nearby', function (data) {
+    console.log('nearby');
+    console.dir(data);
+    io.sockets.emit('nearby', data);
+  });
 });

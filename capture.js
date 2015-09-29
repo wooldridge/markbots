@@ -34,8 +34,8 @@ var intPause = 10000;
 var intId = '';
 
 // Set up MOTION/LED
-var motionFlag = true;
-var ledFlag = true;
+var motionFlag = false;
+var ledFlag = false;
 var board = new five.Board({
     io: new raspi()
 });
@@ -110,11 +110,21 @@ socket.on('motion', function(data){
     motionFlag = data.toggle;
     socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
     saveBot();
-    if (motionFlag) {
-      console.log('motion now off');
+  }
+});
+socket.on('nearby', function(data){
+  console.log('nearby received');
+  console.dir(data);
+  // if ID is this bot, toggle motion
+  if (data.id === config.bot.id) {
+    trigger = 'socket';
+    ledFlag = data.toggle;
+    if (ledFlag) {
+      led.on();
     } else {
-      console.log('motion now on');
+      led.off();
     }
+    socket.emit('nearbyUpdate', {id: config.bot.id, status: ledFlag});
   }
 });
 
@@ -173,10 +183,6 @@ board.on('ready', function () {
 
   // http://johnny-five.io/examples/raspi-io/
   var led = new five.Led("P1-13");
-
-  if (ledFlag) {
-    led.blink(); // not working?
-  }
 
 });
 

@@ -102,6 +102,10 @@ $(document).ready(function () {
                   // for now, assume will be one (since we have two bots)
                   var dist = data[0].dist * 1000; // meters
                   $('tr#row_' + b.getId() + ' td#col_nearby').html(dist.toFixed(2) + ' m');
+                  socket.emit('nearby', {id: this.name, toggle: true});
+                } else {
+                  $('tr#row_' + b.getId() + ' td#col_nearby').html('None');
+                  socket.emit('nearby', {id: this.name, toggle: false});
                 }
             });
           }
@@ -120,18 +124,6 @@ $(document).ready(function () {
         $("input[value='capture']").click(function () {
           console.dir(this);
           socket.emit('captureRequest', {id: this.name});
-        });
-
-        $("input[value='motion']").click(function () {
-          console.dir(this);
-          socket.emit('motionRequest', {id: this.name});
-        });
-
-        // Click motion in table
-        $('.summary-action-move a').on('click', function(event) {
-          console.dir(event);
-          event.preventDefault();
-          socket.emit('motionRequest', {id: $(this).attr('rel')});
         });
 
         // Handle all types of capture toggling
