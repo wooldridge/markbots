@@ -101,12 +101,12 @@ $(document).ready(function () {
                 if (data.length > 0) {
                   // for now, assume will be one (since we have two bots)
                   var dist = data[0].dist * 1000; // meters
-                  var payload = {id: data.id, dist: dist, toggle: true};
+                  var payload = {id: data[0].id, dist: dist, toggle: true};
                   console.dir(payload);
                   $('tr#row_' + b.getId() + ' td#col_nearby').html(dist.toFixed(2) + ' m');
                   socket.emit('nearby', payload);
                 } else {
-                  var payload = {id: data.id, dist: null, toggle: true};
+                  var payload = {id: data[0].id, dist: null, toggle: true};
                   $('tr#row_' + b.getId() + ' td#col_nearby').html('None');
                   socket.emit('nearby', payload);
                 }
