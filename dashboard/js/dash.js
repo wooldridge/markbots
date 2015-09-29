@@ -156,14 +156,14 @@ $(document).ready(function () {
     // Get user GPS coords
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {
-        // Store coords for possible future use
-        userCoords.lat = position.coords.latitude;
-        userCoords.lon = position.coords.longitude;
+        // First, set center to user center
+        mapOptions.center.lat = position.coords.latitude;
+        mapOptions.center.lng = position.coords.longitude;
 
         var mapOptions = config.map.options;
 
         var count = 0;
-        // get GPS coords from first photo that has them, start from most recent
+        // Second, get GPS coords from first photo that has them, start from most recent
         while (photos[count]) {
           var coords = photos[count].getCoords()
           if (coords.lat !== null && coords.lon !== null) {
