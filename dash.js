@@ -194,7 +194,7 @@ router.get('/nearby', function(req, res, next) {
     q.where(
       q.propertiesFragment(
         q.geospatial(
-          q.circle(10, latlon(lat, lon))
+          q.circle(10, q.latlon(lat, lon))
         )
       )
     )
