@@ -119,8 +119,8 @@ socket.on('nearby', function(data){
   if (data.id === config.bot.id) {
     trigger = 'socket';
     ledFlag = data.toggle;
-    if (ledFlag) {
-      led.on();
+    if (ledFlag && dist !== null) {
+      led.blink(dist * 10);
     } else {
       led.off();
     }

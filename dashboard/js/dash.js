@@ -102,10 +102,10 @@ $(document).ready(function () {
                   // for now, assume will be one (since we have two bots)
                   var dist = data[0].dist * 1000; // meters
                   $('tr#row_' + b.getId() + ' td#col_nearby').html(dist.toFixed(2) + ' m');
-                  socket.emit('nearby', {id: this.name, toggle: true});
+                  socket.emit('nearby', {id: this.name, dist: dist, toggle: true});
                 } else {
                   $('tr#row_' + b.getId() + ' td#col_nearby').html('None');
-                  socket.emit('nearby', {id: this.name, toggle: false});
+                  socket.emit('nearby', {id: this.name, dist: null, toggle: false});
                 }
             });
           }
