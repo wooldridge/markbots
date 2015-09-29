@@ -26,3 +26,7 @@ section.row {
 }
 
 .capture-toggle.on, .capture-toggle:active { color:green; }
+
+#summary-table tr td {
+  padding-top: 10px;
+}
