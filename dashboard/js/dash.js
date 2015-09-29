@@ -90,7 +90,16 @@ $(document).ready(function () {
         var botsJson = [];
         bots.forEach(function(b) {
           // set nearby status
-          b.setNearby(bots);
+          //b.setNearby(bots);
+          var coords = b.getCoords();
+          if (coords.lat && coords.lon) {
+            $.ajax('http://' + config.dashboard.host + ':' + config.dashboard.port +
+            '/api/nearby?lat=' + coords.lat + '&lon=' + coords.lon)
+              .done(function(data) {
+                console.log('nearby results');
+                console.dir(data);
+            });
+          }
           // Only push if bot has images
           //if (b.getPhotos().length > 0) {
             botsJson.push(b.getAsJson());

@@ -185,6 +185,33 @@ router.get('/bot', function(req, res, next) {
     });
 });
 
+// GET nearby bots
+router.get('/nearby', function(req, res, next) {
+  // params from URL
+  var lat = req.query.lat,
+      lon = req.query.lon;
+  db.documents.query(
+    q.where(
+      q.propertiesFragment(
+        q.geospatial(
+          q.circle(10, latlon(lat, lon))
+        )
+      )
+    )
+    .withOptions({categories: 'properties'})
+  )
+  .result(function(documents) {
+      var results = [];
+      documents.forEach(function(document) {
+        results.push(document)
+      });
+      console.log("Result count: " + results.length);
+      res.json(results);
+      }, function(error) {
+        console.dir(error);
+    });
+});
+
 // DELETE document
 router.get('/delete', function(req, res, next) {
   // params from URL
