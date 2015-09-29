@@ -90,7 +90,7 @@ socket.on('multi', function(data){
   console.dir(data);
   // if ID is this bot, start timelapse
   if (data.id === config.bot.id) {
-    if (intId === '') {
+    if (intId === '' && data.toggle) {
       capturePhoto('multi');
       intId = setInterval(function () {
         capturePhoto('multi');
@@ -107,7 +107,7 @@ socket.on('motion', function(data){
   // if ID is this bot, toggle motion
   if (data.id === config.bot.id) {
     trigger = 'socket';
-    motionFlag = !motionFlag;
+    motionFlag = data.toggle;
     socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
     saveBot();
   }

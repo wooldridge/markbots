@@ -272,15 +272,20 @@ var server = app.listen(port, function () {
 var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
   console.log('connection established');
-  socket.on('captureRequest', function (data) {
-    console.log('captureRequest');
-    console.dir(data);
-    io.sockets.emit('capture', data);
-  });
   socket.on('multiRequest', function (data) {
     console.log('multiRequest');
     console.dir(data);
     io.sockets.emit('multi', data);
+  });
+  socket.on('multiUpdate', function (data) {
+    console.log('multiUpdate');
+    console.dir(data);
+    io.sockets.emit('multiUpdate', data);
+  });
+  socket.on('captureRequest', function (data) {
+    console.log('captureRequest');
+    console.dir(data);
+    io.sockets.emit('capture', data);
   });
   socket.on('captureUpdate', function (data) {
     console.log('captureUpdate');
