@@ -139,9 +139,10 @@ $(document).ready(function () {
           console.dir(event);
           event.preventDefault();
           var parent = $(this).parents('.summary-row');
+          var link = $(this).parents('a');
           var toggleType = parent.find('.summary-action-setting select').val();
           var toggleSetting = !parent.find('.capture-toggle').hasClass('on');
-          socket.emit(toggleType + 'Request', { id: parent.attr('rel'), toggle: toggleSetting });
+          socket.emit(toggleType + 'Request', { id: link.attr('rel'), toggle: toggleSetting });
           if (toggleSetting && toggleType !== 'capture')
             parent.find('.capture-toggle').addClass('on');
           else
