@@ -210,7 +210,8 @@ router.get('/bot', function(req, res, next) {
 // GET nearby bots
 router.get('/nearby', function(req, res, next) {
   // params from URL
-  var lat = req.query.lat,
+  var id = req.query.id,
+      lat = req.query.lat,
       lon = req.query.lon;
   db.documents.query(
     q.where(
@@ -222,7 +223,7 @@ router.get('/nearby', function(req, res, next) {
             q.qname('http://marklogic.com/xdmp/json/basic', 'lat'),
             q.qname('http://marklogic.com/xdmp/json/basic', 'lon')
           ),
-          q.circle(config.bot.nearby*(1/5280), parseFloat(lat), parseFloat(lon))
+          q.circle(parseFloat(config.bot.nearby)/5280, parseFloat(lat), parseFloat(lon))
         )
       )
     )
@@ -234,9 +235,11 @@ router.get('/nearby', function(req, res, next) {
       documents.forEach(function(document) {
         var dist = getDistBetwPoints(
           lat, lon, document.properties.lat, document.properties.lon
-        );
-        var item = { id: document.properties.id, dist: dist };
-        results.push(item)
+        ); // Distance in km
+        if (document.properties.id !== id) {
+          var item = { id: document.properties.id, dist: dist };
+          results.push(item)
+        }
       });
       console.log("Result count: " + results.length);
       res.json(results);

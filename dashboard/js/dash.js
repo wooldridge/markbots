@@ -94,7 +94,7 @@ $(document).ready(function () {
           var coords = b.getCoords();
           if (coords.lat && coords.lon) {
             $.ajax('http://' + config.dashboard.host + ':' + config.dashboard.port +
-            '/api/nearby?lat=' + coords.lat + '&lon=' + coords.lon)
+            '/api/nearby?id=' + b.getId() + '&lat=' + coords.lat + '&lon=' + coords.lon)
               .done(function(data) {
                 console.log('nearby results');
                 console.dir(data);
