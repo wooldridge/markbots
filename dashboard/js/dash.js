@@ -101,7 +101,7 @@ $(document).ready(function () {
                 if (data.length > 0) {
                   // for now, assume will be one (since we have two bots)
                   var dist = data[0].dist.toFixed(2);
-                  $('tr#row_' + b.getId() + ' td.col_nearby').html(dist);
+                  $('tr#row_' + b.getId() + ' td#col_nearby').html(dist);
                 }
             });
           }
