@@ -146,6 +146,7 @@ $(document).ready(function () {
         $('.summary-action-setting select').on('change', function(event) {
           console.dir(event);
           event.preventDefault();
+          var parent = $(this).parents('.summary-row');
           parent.find('.capture-toggle').removeClass('on');
           socket.emit($('.summary-action-setting select[rel="'+data.id+'"]').val() + 'Request', {id: $(this).attr('rel'), toggle: 'off' });
         });
