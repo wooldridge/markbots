@@ -155,147 +155,147 @@ $(document).ready(function () {
   function setUpMap(bots, photos) {
     // Get user GPS coords
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          // Store coords for possible future use
-          userCoords.lat = position.coords.latitude;
-          userCoords.lon = position.coords.longitude;
-      });
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
+      navigator.geolocation.getCurrentPosition(function (position) {
+        // Store coords for possible future use
+        userCoords.lat = position.coords.latitude;
+        userCoords.lon = position.coords.longitude;
 
-    var mapOptions = config.map.options;
+        var mapOptions = config.map.options;
 
-    var count = 0;
-    // get GPS coords from first photo that has them, start from most recent
-    while (photos[count]) {
-      var coords = photos[count].getCoords()
-      if (coords.lat !== null && coords.lon !== null) {
-        mapOptions.center.lat = coords.lat;
-        mapOptions.center.lng = coords.lon;
-        break;
-      }
-      count++;
-    }
-
-    // if map is drawn, maintain zoom and center
-    if (map) {
-      mapOptions.zoom = map.getZoom();
-      var centerCoords = map.getCenter();
-      mapOptions.center.lat = centerCoords.lat();
-      mapOptions.center.lng = centerCoords.lng();
-    }
-
-    map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-    map.setOptions({styles: config.map.styles[config.map.activeStyle]});
-
-    // RECTANGLE CONTROL
-    // get existing coords (if present)
-    var coords = {
-      lat1: $('form #lat1').val(),
-      lon1: $('form #lon1').val(),
-      lat2: $('form #lat2').val(),
-      lon2: $('form #lon2').val()
-    }
-    // set up rectangle
-    var rectangle = new APP.Rectangle(map, coords);
-    // show or hide depending on control
-    if ($('#rect').val() === 'true') {
-      rectangle.show();
-    } else {
-      rectangle.hide();
-      $('form #lat1').disabled = true;
-      $('form #lon1').disabled = true;
-      $('form #lat2').disabled = true;
-      $('form #lon2').disabled = true;
-    }
-    // handle resize events
-    rectangle.setListener(function (event) {
-      var coords = rectangle.getCoords();
-      console.dir(coords);
-      $('form #lat1').val(coords.lat1);
-      $('form #lon1').val(coords.lon1);
-      $('form #lat2').val(coords.lat2);
-      $('form #lon2').val(coords.lon2);
-    });
-    // handle control events
-    $('#rect').on( "change", function () {
-      if ($('#rect').val() === 'true') {
-        $('form #lat1').disabled = false;
-        $('form #lon1').disabled = false;
-        $('form #lat2').disabled = false;
-        $('form #lon2').disabled = false;
-      } else {
-        $('form #lat1').disabled = true;
-        $('form #lon1').disabled = true;
-        $('form #lat2').disabled = true;
-        $('form #lon2').disabled = true;
-        $('form #lat1').val('');
-        $('form #lon1').val('');
-        $('form #lat2').val('');
-        $('form #lon2').val('');
-        getBots();
-      }
-    });
-
-    // handle update button events
-    $('#update').on( "click", function () {
-        var coords = rectangle.getCoords();
-        $('form #lat1').val(coords.lat1);
-        $('form #lon1').val(coords.lon1);
-        $('form #lat2').val(coords.lat2);
-        $('form #lon2').val(coords.lon2);
-        getBots();
-      }
-    );
-
-    coordsForLine = {};
-    photos.forEach(function(photo) {
-      var coords = photo.getCoords();
-      if (coords.lat && coords.lon) {
-        var icon = {
-          url: 'images/'+photo.getBotId()+'.png',
-          size: new google.maps.Size(32, 32),
-          origin: new google.maps.Point(0, 0),
-          anchor: new google.maps.Point(16, 16)
-        };
-        var marker = new google.maps.Marker({
-          map: map,
-          position: {
-            lat: coords.lat,
-            lng: coords.lon
-          },
-          title: photo.getUri(),
-          icon: icon,
-          anchorPoint: new google.maps.Point(8, 8)
-        });
-        if (coordsForLine[photo.getBotId()]) {
-          coordsForLine[photo.getBotId()].push({lat: coords.lat, lng: coords.lon});
-        } else {
-          coordsForLine[photo.getBotId()] = [];
-          coordsForLine[photo.getBotId()].push({lat: coords.lat, lng: coords.lon});
+        var count = 0;
+        // get GPS coords from first photo that has them, start from most recent
+        while (photos[count]) {
+          var coords = photos[count].getCoords()
+          if (coords.lat !== null && coords.lon !== null) {
+            mapOptions.center.lat = coords.lat;
+            mapOptions.center.lng = coords.lon;
+            break;
+          }
+          count++;
         }
-        //coordsForLine.push({lat: coords.lat, lng: coords.lon});
-        // Open lightbox image on marker click
-        google.maps.event.addListener(marker, 'click', function() {
-          actuateLink(document.getElementById(photo.getUri()));
-        });
-      }
-    });
 
-    bots.forEach(function(b) {
-      if (coordsForLine[b.getId()]) {
-        var photoPath = new google.maps.Polyline({
-          path: coordsForLine[b.getId()],
-          geodesic: true,
-          strokeColor: '#666666',
-          strokeOpacity: 0.4,
-          strokeWeight: 2
+        // if map is drawn, maintain zoom and center
+        if (map) {
+          mapOptions.zoom = map.getZoom();
+          var centerCoords = map.getCenter();
+          mapOptions.center.lat = centerCoords.lat();
+          mapOptions.center.lng = centerCoords.lng();
+        }
+
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+        map.setOptions({styles: config.map.styles[config.map.activeStyle]});
+
+        // RECTANGLE CONTROL
+        // get existing coords (if present)
+        var coords = {
+          lat1: $('form #lat1').val(),
+          lon1: $('form #lon1').val(),
+          lat2: $('form #lat2').val(),
+          lon2: $('form #lon2').val()
+        }
+        // set up rectangle
+        var rectangle = new APP.Rectangle(map, coords);
+        // show or hide depending on control
+        if ($('#rect').val() === 'true') {
+          rectangle.show();
+        } else {
+          rectangle.hide();
+          $('form #lat1').disabled = true;
+          $('form #lon1').disabled = true;
+          $('form #lat2').disabled = true;
+          $('form #lon2').disabled = true;
+        }
+        // handle resize events
+        rectangle.setListener(function (event) {
+          var coords = rectangle.getCoords();
+          console.dir(coords);
+          $('form #lat1').val(coords.lat1);
+          $('form #lon1').val(coords.lon1);
+          $('form #lat2').val(coords.lat2);
+          $('form #lon2').val(coords.lon2);
         });
-        photoPath.setMap(map);
+        // handle control events
+        $('#rect').on( "change", function () {
+          if ($('#rect').val() === 'true') {
+            $('form #lat1').disabled = false;
+            $('form #lon1').disabled = false;
+            $('form #lat2').disabled = false;
+            $('form #lon2').disabled = false;
+          } else {
+            $('form #lat1').disabled = true;
+            $('form #lon1').disabled = true;
+            $('form #lat2').disabled = true;
+            $('form #lon2').disabled = true;
+            $('form #lat1').val('');
+            $('form #lon1').val('');
+            $('form #lat2').val('');
+            $('form #lon2').val('');
+            getBots();
+          }
+        });
+
+        // handle update button events
+        $('#update').on( "click", function () {
+            var coords = rectangle.getCoords();
+            $('form #lat1').val(coords.lat1);
+            $('form #lon1').val(coords.lon1);
+            $('form #lat2').val(coords.lat2);
+            $('form #lon2').val(coords.lon2);
+            getBots();
+          }
+        );
+
+        coordsForLine = {};
+        photos.forEach(function(photo) {
+          var coords = photo.getCoords();
+          if (coords.lat && coords.lon) {
+            var icon = {
+              url: 'images/'+photo.getBotId()+'.png',
+              size: new google.maps.Size(32, 32),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(16, 16)
+            };
+            var marker = new google.maps.Marker({
+              map: map,
+              position: {
+                lat: coords.lat,
+                lng: coords.lon
+              },
+              title: photo.getUri(),
+              icon: icon,
+              anchorPoint: new google.maps.Point(8, 8)
+            });
+            if (coordsForLine[photo.getBotId()]) {
+              coordsForLine[photo.getBotId()].push({lat: coords.lat, lng: coords.lon});
+            } else {
+              coordsForLine[photo.getBotId()] = [];
+              coordsForLine[photo.getBotId()].push({lat: coords.lat, lng: coords.lon});
+            }
+            //coordsForLine.push({lat: coords.lat, lng: coords.lon});
+            // Open lightbox image on marker click
+            google.maps.event.addListener(marker, 'click', function() {
+              actuateLink(document.getElementById(photo.getUri()));
+            });
+          }
+        });
+
+        bots.forEach(function(b) {
+          if (coordsForLine[b.getId()]) {
+            var photoPath = new google.maps.Polyline({
+              path: coordsForLine[b.getId()],
+              geodesic: true,
+              strokeColor: '#666666',
+              strokeOpacity: 0.4,
+              strokeWeight: 2
+            });
+            photoPath.setMap(map);
+          }
+        });
+      });
+      } else {
+          console.log("Geolocation is not supported by this browser.");
       }
-    });
 
   }
 
