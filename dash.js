@@ -222,7 +222,7 @@ router.get('/nearby', function(req, res, next) {
             q.qname('http://marklogic.com/xdmp/json/basic', 'lat'),
             q.qname('http://marklogic.com/xdmp/json/basic', 'lon')
           ),
-          q.circle((1/5280), parseFloat(lat), parseFloat(lon))
+          q.circle(config.bot.nearby*(1/5280), parseFloat(lat), parseFloat(lon))
         )
       )
     )
