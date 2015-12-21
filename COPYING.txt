@@ -1,0 +1,48 @@
+## Copying a Raspberry Pi Environment
+
+You can copy the SD card of a working Raspberry Pi to a disk image.
+Then you can use the disk image to create working cards for other 
+Raspberry Pi devices. This example is for copying on using a Mac.
+
+1. Remove WiFi settings specific to your local network:
+
+sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+
+Remove the network object (has WiFi password and other settings)
+
+You may want to remove other settings as well, such as config.js.
+
+2. Remove the SD card from Raspberry Pi and insert into your Mac
+(I needed to use an adapter for the micro-sized card).
+
+3. Run the dd utility to create disk image.
+
+http://raspberrypi.stackexchange.com/questions/311/how-do-i-backup-my-raspberry-pi
+
+Get SD card ID number:
+
+diskutil list
+
+Create disk image based on the number (e.g., 2):
+
+sudo dd if=/dev/rdisk2 of=/temp/rpi_img bs=1m
+
+(Takes 5-10 minutes)
+
+4. Run the dd utility to copy the disk image to new card.
+
+https://www.raspberrypi.org/documentation/installation/installing-images/mac.md
+
+Insert the new SD card and get the ID number:
+
+diskutil list
+
+Unmount the SD card based on number (e.g., 2):
+
+diskutil unmountDisk /dev/disk2
+
+Copy image to SD card:
+
+sudo dd bs=1m if=/temp/rpi_img of=/dev/rdisk2
+
+(Takes 5-10 minutes)
