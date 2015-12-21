@@ -142,7 +142,7 @@ worked after that
 cd markbots
 sudo node capture
 
-11. Extra: Tether Bot to iPhone:
+Extra: Tether Bot to iPhone
  
 http://www.daveconroy.com/how-to-tether-your-raspberry-pi-with-your-iphone-5/
 
