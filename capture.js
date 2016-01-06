@@ -214,12 +214,15 @@ var capturePhoto = function (trigger) {
 // SAVE PHOTO TO MARKLOGIC
 var savePhoto = function (buffer) {
   var uri = dateString + '.jpg';
+  // set coords using config defaults if none avail
+  var lat = (gps.lat) ? gps.lat : config.bot.lat;
+  var lon = (gps.lon) ? gps.lon : config.bot.lon;
   var properties = {
     cat: 'photo',
     uri: uri,
     id: config.bot.id,
-    lat: gps.lat,
-    lon: gps.lon,
+    lat: lat,
+    lon: lon,
     tr: trigger,
     ts: dateString,
     ip: ip
@@ -246,6 +249,9 @@ var savePhoto = function (buffer) {
 // SAVE BOT HEARTBEAT TO MARKLOGIC
 var saveBot = function () {
   var m = new Date();
+  // set coords using config defaults if none avail
+  var lat = (gps.lat) ? gps.lat : config.bot.lat;
+  var lon = (gps.lon) ? gps.lon : config.bot.lon;
   dateString =
     m.getFullYear() +'-'+
     ('0' + (m.getMonth()+1)).slice(-2) +'-'+
@@ -257,10 +263,8 @@ var saveBot = function () {
   var properties = {
     cat: 'bot',
     id: config.bot.id,
-    //lat: gps.lat,
-    //lon: gps.lon,
-    lat: 38.924334321,
-    lon: -77.223951234,
+    lat: lat,
+    lon: lon,
     ts: dateString,
     ip: ip,
     mot: motionFlag

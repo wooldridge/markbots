@@ -5,13 +5,14 @@
   "author": "Mike Wooldridge <mike@hellion.org>",
   "main": "cam.js",
   "dependencies": {
-    "express": "^4.13.3",
-    "johnny-five": "^0.8.87",
-    "marklogic": "^1.0.3",
-    "node-gpsd": "^0.2.2",
-    "raspicam": "^0.2.13",
-    "socket.io": "^1.3.6",
-    "socket.io-client": "^1.3.7"
+    "express": "4.13.3",
+    "johnny-five": "0.8.87",
+    "marklogic": "1.0.3",
+    "node-gpsd": "0.2.2",
+    "raspicam": "0.2.13",
+    "raspi-io": "3.4.0",
+    "socket.io": "1.3.6",
+    "socket.io-client": "1.3.7"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

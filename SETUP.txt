@@ -1,4 +1,4 @@
-MARKBOT SETUP
+## MarkBot Setup
 
 Raspberry Pi 2 Model B
 http://www.amazon.com/gp/product/B00MV6TAJI
@@ -22,7 +22,13 @@ could proceed.
 - Enable Boot to Desktop/Scratch: Desktop Log in
 - Internationalisation Options: Change Locale: en_US.UTF-8 UTF-8
 - Internationalisation Options: Change Timezone: US: Pacific Ocean
+- Internationalisation Options: Change Keyboard Layout: (*US* Keyboard)
 - Enable Camera: Enable
+
+Note: If you're getting unexpected characters when typing, check keyboard
+Internationalisation Options for Keyboard Layout above.
+
+https://www.raspberrypi.org/forums/viewtopic.php?f=26&t=11544
 
 3. To set up Wifi, shut down the Raspberry Pi, insert the USB Wifi adapter, and
 restart the Raspberry Pi. Then:
@@ -37,56 +43,45 @@ sudo wget https://nodejs.org/dist/v0.10.40/node-v0.10.40.tar.gz
 sudo tar -zxvf node-v0.10.40.tar.gz
 cd node-v0.10.40/
 sudo ./configure
-# The following takes a long time, an hour or more
+
+(The following takes a long time, an hour or more)
+
 sudo make
 sudo make install
 
-# confirm node works:
+Confirm node works:
+
 node -v
-# should return
+
+Should return:
+
 v0.10.40
 
-5. Set up access to github
+5. Clone MarkBots GitHub project onto Raspberry Pi:
 
-https://help.github.com/articles/generating-ssh-keys/
+git clone https://github.com/wooldridge/markbots
 
-# in home folder
-ssh-keygen -t rsa -b 4096 -C "YOUR@EMAIL.COM"
-eval "$(ssh-agent -s)"
-ssh-add .ssh/id_rsa
-cat .ssh/id_rsa.pub
-# copy key to GitHub account
-
-Access to GitHub site features is problematic with the Raspberry Pi browser. I
-needed to generate my SSH key on the Raspberry Pi and then email to myself. I
-could then input the key in the GitHub settings via a browser on my Mac.
-
-Note: At this point during my thrid MarkBot install, the double-quote and
-at-sign characters on my keyboard were swapped.
-
-6. Clone markbots project onto Raspberry Pi:
-
-sudo git clone https://wooldridge@github.com/wooldridge/markbots
-
-7. Set up the Raspberry Pi camera:
+6. Set up the Raspberry Pi camera:
 
 https://www.raspberrypi.org/documentation/configuration/camera.md
 
 Plug in the camera with the blue stripe toward Ethernet port.
 
-Run the following as suggested (took a long time, 15 minutes?):
+Run the following as suggested (took at least 15 minutes):
 
 sudo apt-get update
 sudo apt-get upgrade
 
 To test, run:
+
 raspistill -v -o test.jpg
 
-(Should save an image to the current directory)
+(Will save an image to the current directory)
 
-8. Set up the GPS receiver:
+7. Set up the GPS receiver:
 
 Plug in the USB-to-TTL serial cable:
+
 http://www.amazon.com/gp/product/B00QT7LQ88
 http://www.adafruit.com/products/954
 
@@ -94,7 +89,7 @@ https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/setting-eve
 
 Connect cable wires to GPS device:
 
-Red -> VIN
+Red   -> VIN
 Black -> Grd
 Green -> Rx
 White -> Tx
@@ -110,47 +105,56 @@ To test:
 
 cgps -s
 
-12. Set up PIR motion sensor
+8. Set up PIR motion sensor
 
 https://www.raspberrypi.org/learning/parent-detector/worksheet/
 
-13. Install Node.js dependencies. From the markbots directory:
+Gnd ->  Black -> left
+GPIO pin 4 -> White -> middle
+5V pin -> Red -> right
 
-# perform separately, seems to cause problems during full npm install
-# sudo npm --save install raspi-io
-# INSTEAD, INSTALL GLOBALLY AND AVOID HAVING TO INSTALL ON NON-RPI PLATFORMS
+9. Install Node.js dependencies. From the markbots directory:
+
+sudo npm install --production
+
+(Takes a while, 15 minutes. Use --production to not install dev dependencies, 
+i.e. grunt, which are there for dashboard development.)
+
+NOTE: Had problems installing raspi-io in the past. Possible solutions include:
+
+Install globally:
+
 sudo npm -g install raspi-io --unsafe-perms
 
-# to fix install issues with raspi-io, changed perms as described here (option 1):
+To fix install issues with raspi-io, change perms as described here (option 1):
+
 https://docs.npmjs.com/getting-started/fixing-npm-permissions
 
-# Ugh, still trying to fix this. Let's just install raspi-io separately and
-# locally on RPi. From markbots home directory:
+Install locally on RPi, separate from other installs:
+
 sudo npm install raspi-io
 
-# in one setup (#3), experienced error during raspi-io install, had to reboot,
+During one setup, experienced error during raspi-io install, had to reboot,
 worked after that
 
-sudo npm install
-
-(Takes a while, 15 minutes)
-
-14. TEST MARKBOT
+10. Test the MarkBot
 
 cd markbots
-sudo chmod 777 *.js
 sudo node capture
 
-15. Tether Bot to iPhone:
-
+Extra: Tether Bot to iPhone
+ 
 http://www.daveconroy.com/how-to-tether-your-raspberry-pi-with-your-iphone-5/
+
+Note: Experience shows these steps can conflict with normal WiFi working
+correctly. If this happens, may need to edit /etc/network/interfaces to fix.
 
 Install the following:
 
 sudo apt-get install gvfs ipheth-utils
 sudo apt-get install libimobiledevice-utils gvfs-backends gvfs-bin gvfs-fuse
 
-Edit:
+Edit the following:
 
 sudo nano /etc/network/interfaces
 

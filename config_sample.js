@@ -2,6 +2,9 @@ var config = {};
 
 config.bot = {
   id: 'BOT_ID', // e.g., 'markbot1'
+  // default location for bot (to use if GPS not available)
+  lat: 37.507350,
+  lon: -122.24667,
   motion: true,
   heartbeat: 10000, // milliseconds
   nearby: 500 // feet
