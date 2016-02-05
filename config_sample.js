@@ -40,7 +40,8 @@ config.raspicam = {
   preview: '0,0,640,480',
   encoding: "jpg",
   timeout: 1000, // millisecs
-  verbose: true
+  verbose: true,
+  output: ''
 }
 
 // Where is MarkLogic running?
