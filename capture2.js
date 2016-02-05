@@ -138,7 +138,8 @@ camera.on('exit', function(timestamp){
   console.log('start marklogic save, timestamp: ' + timestamp);
   buffer = fs.readFileSync(output);
   savePhoto(buffer);
-  saveData({test: 123}, 'data');
+  var base64 = buffer.toString('base64');
+  saveData({base64: base64}, 'data');
   console.log('photo child process has exited at ' + timestamp);
   camera.stop();
 });
