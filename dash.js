@@ -165,10 +165,9 @@ router.get('/photoBase64', function(req, res, next) {
   var uri = req.query.uri ? req.query.uri : '';
   db.documents.read(uri)
   .result(function(documents) {
-      //res.type('application/jpeg');
-      //res.end(documents[0].content, 'binary');
-      res.type('application/json');
-      res.end(documents[0].content, 'json');
+      res.type('application/jpeg');
+      var buff = new Buffer(documents[0].content.payload.base64, 'base64');
+      res.end(buff, 'binary');
       }, function(error) {
         console.dir(error);
     });
