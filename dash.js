@@ -159,6 +159,21 @@ router.get('/photo', function(req, res, next) {
     });
 });
 
+// GET photo encoded as Base64
+router.get('/photoBase64', function(req, res, next) {
+  // params from URL
+  var uri = req.query.uri ? req.query.uri : '';
+  db.documents.read(uri)
+  .result(function(documents) {
+      //res.type('application/jpeg');
+      //res.end(documents[0].content, 'binary');
+      res.type('application/json');
+      res.end(documents[0].content, 'json');
+      }, function(error) {
+        console.dir(error);
+    });
+});
+
 // GET bot data
 router.get('/bots', function(req, res, next) {
   // params from URL
