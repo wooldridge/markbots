@@ -138,6 +138,7 @@ camera.on('exit', function(timestamp){
   console.log('start marklogic save, timestamp: ' + timestamp);
   buffer = fs.readFileSync(output);
   savePhoto(buffer);
+  saveData({test: 123}, 'data');
   console.log('photo child process has exited at ' + timestamp);
   camera.stop();
 });
@@ -187,7 +188,6 @@ var savePhoto = function (buffer) {
 
 // SAVE BOT HEARTBEAT TO MARKLOGIC
 var saveBot = function () {
-  var m = new Date();
   // set coords using config defaults if none avail
   var lat = (gps.lat) ? gps.lat : config.bot.lat;
   var lon = (gps.lon) ? gps.lon : config.bot.lon;
@@ -214,6 +214,38 @@ var saveBot = function () {
         console.log('  ' + document.uri);
       });
       socket.emit('botUpdate', properties);
+    },
+    function(error) {
+      console.log(JSON.stringify(error, null, 2));
+    }
+  );
+};
+
+// SAVE DATA (ALL JSON, GENERIC)
+var saveData = function (payload, type) {
+  var lat = (gps.lat) ? gps.lat : config.bot.lat;
+  var lon = (gps.lon) ? gps.lon : config.bot.lon;
+  dateString = getTimestamp();
+  var json = {
+    id: config.bot.id,
+    type: type,
+    lat: lat,
+    lon: lon,
+    timestamp: dateString,
+    ip: ip,
+    payload: payload
+  };
+  db.documents.write({
+    uri: dateString + '.json',
+    content: json,
+    collections: [type, 'new']
+  }).result(
+    function(response) {
+      console.log('Loaded the following documents (data):');
+      response.documents.forEach( function(document) {
+        console.log('  ' + document.uri);
+      });
+      socket.emit('dataSaved', json);
     },
     function(error) {
       console.log(JSON.stringify(error, null, 2));
