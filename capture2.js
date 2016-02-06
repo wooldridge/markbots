@@ -246,7 +246,7 @@ var saveData = function (payload) {
     payload: payload
   };
   db.documents.write({
-    uri: dateString + '.json',
+    uri: id + '.json',
     content: json,
     collections: [payload.type, 'new']
   }).result(
