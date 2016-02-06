@@ -5,7 +5,8 @@ var config = require('./config'),
     fs = require('fs'),
     raspi = require('raspi-io'),
     five = require('johnny-five'),
-    ifaces = require('os').networkInterfaces();
+    ifaces = require('os').networkInterfaces(),
+    uuid = require('node-uuid');
 
 var board = null,
     motion = null,
@@ -19,7 +20,8 @@ var board = null,
     dateString = '',
     trigger = '',
     ip = null,
-    buffer = null;
+    buffer = null,
+    id = null;
 
 // Set IP addresses
 if (ifaces.wlan0 && ifaces.wlan0[0]) {
@@ -139,7 +141,12 @@ camera.on('exit', function(timestamp){
   buffer = fs.readFileSync(output);
   savePhoto(buffer);
   var base64 = buffer.toString('base64');
-  saveData({base64: base64}, 'data');
+  saveData({
+    type: 'image',
+    format: 'jpeg',
+    encoding: 'base64',
+    data: base64
+  });
   console.log('photo child process has exited at ' + timestamp);
   camera.stop();
 });
@@ -223,23 +230,25 @@ var saveBot = function () {
 };
 
 // SAVE DATA (ALL JSON, GENERIC)
-var saveData = function (payload, type) {
-  var lat = (gps.lat) ? gps.lat : config.bot.lat;
-  var lon = (gps.lon) ? gps.lon : config.bot.lon;
-  dateString = getTimestamp();
+var saveData = function (payload) {
+  // var lat = (gps.lat) ? gps.lat : config.bot.lat;
+  // var lon = (gps.lon) ? gps.lon : config.bot.lon;
+  // dateString = getTimestamp();
+  id = uuid.v4();
   var json = {
-    id: config.bot.id,
-    type: type,
-    lat: lat,
-    lon: lon,
-    timestamp: dateString,
+    id: id,
+    deviceId: config.bot.id,
+    type: payload.type,
+    lat: (gps.lat) ? gps.lat : config.bot.lat,
+    lon: (gps.lon) ? gps.lon : config.bot.lon,
+    timestamp: getTimestamp(),
     ip: ip,
     payload: payload
   };
   db.documents.write({
     uri: dateString + '.json',
     content: json,
-    collections: [type, 'new']
+    collections: [payload.type, 'new']
   }).result(
     function(response) {
       console.log('Loaded the following documents (data):');
@@ -255,4 +264,5 @@ var saveData = function (payload, type) {
 };
 
 saveBot();
+saveData({type: 'heartbeat'});
 setInterval(saveBot, config.bot.heartbeat, 'foo');
