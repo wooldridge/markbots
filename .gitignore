@@ -28,6 +28,6 @@ node_modules
 bower_components
 
 # Captured photos
-photos/*
+images/*
 
 config.js
