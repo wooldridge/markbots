@@ -72,7 +72,7 @@ socket.on('motion', function(data){
     trigger = 'socket';
     motionFlag = data.toggle;
     socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
-    saveBot();
+    saveData({type: 'heartbeat'});
   }
 });
 // LED event received, turn on or off based on data received
@@ -183,4 +183,4 @@ var saveData = function (payload) {
 };
 
 saveData({type: 'heartbeat'});
-setInterval(saveBot, config.bot.heartbeat, 'foo');
+setInterval(saveData, config.bot.heartbeat, 'foo');
