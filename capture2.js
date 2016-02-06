@@ -25,10 +25,10 @@ var board = null,
 
 // Set IP addresses
 if (ifaces.wlan0 && ifaces.wlan0[0]) {
-  ip = ifaces.wlan0[0].address.replace(/\./g, '-');
+  ip = ifaces.wlan0[0].address; //.replace(/\./g, '-');
 }
 else if (ifaces.eth1 && ifaces.eth1[0]) {
-  ip = ifaces.eth1[0].address.replace(/\./g, '-');
+  ip = ifaces.eth1[0].address; //.replace(/\./g, '-');
 }
 
 // BOARD SETUP
