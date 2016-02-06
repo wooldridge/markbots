@@ -183,4 +183,4 @@ var saveData = function (payload) {
 };
 
 saveData({type: 'heartbeat'});
-setInterval(saveData, config.bot.heartbeat, 'foo');
+setInterval(saveData, config.bot.heartbeat, {type: 'heartbeat'});
