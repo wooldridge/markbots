@@ -17,7 +17,7 @@ var board = null,
     motionFlag = config.bot.motion,
     ledFlag = false,
     output = config.raspicam.output,
-    dateString = '',
+    timestamp = '',
     trigger = '',
     ip = null,
     buffer = null,
@@ -44,7 +44,7 @@ board.on('ready', function () {
     console.log('motion detected, motionFlag = ' + motionFlag);
     if (motionFlag === true) {
       trigger = 'motion';
-      capturePhoto(config.raspicam.timeout);
+      captureImage(config.raspicam.timeout);
     }
   });
   motion.on('motionend', function () {
@@ -94,9 +94,9 @@ socket.on('nearby', function(data){
 socket.on('capture', function(data){
   console.log('capture received');
   console.dir(data);
-  // if ID is this bot and multi not on, capture photo
+  // if ID is this bot and multi not on, capture image
   if (data.id === config.bot.id && intervalId === null) {
-    capturePhoto(1);
+    captureImage(1);
   }
 });
 socket.on('multi', function(data){
@@ -105,9 +105,9 @@ socket.on('multi', function(data){
   // if ID is this bot, start timelapse
   if (data.id === config.bot.id) {
     if (intervalId === null && data.toggle) {
-      capturePhoto(1);
+      captureImage(1);
       intervalId = setInterval(function () {
-        capturePhoto(1);
+        captureImage(1);
       }, 10000, 'foo');
     } else {
       clearInterval(intervalId);
@@ -124,13 +124,13 @@ function getTimestamp () {
 // CAMERA SETUP
 camera = new raspicam(config.raspicam);
 camera.on('start', function(err, timestamp){
-  console.log('photo started at ' + timestamp );
+  console.log('Image capture started at: ' + timestamp );
 });
 camera.on('read', function(err, timestamp, filename){
-  console.log('photo image captured with filename: ' + filename);
+  console.log('Image captured with filename: ' + filename);
 });
 camera.on('exit', function(timestamp){
-  console.log('start marklogic save, timestamp: ' + timestamp);
+  console.log('MarkLogic save started at: ' + timestamp);
   buffer = fs.readFileSync(output);
   var base64 = buffer.toString('base64');
   saveData({
@@ -139,12 +139,12 @@ camera.on('exit', function(timestamp){
     encoding: 'base64',
     data: base64
   });
-  console.log('photo child process has exited at ' + timestamp);
+  console.log('Image capture child process exited at: ' + timestamp);
   camera.stop();
 });
-var capturePhoto = function (timeout) {
-  dateString = getTimestamp();
-  output = './photos/' + dateString + '.jpg';
+var captureImage = function (timeout) {
+  timestamp = getTimestamp();
+  output = './images/' + timestamp + '.jpg';
   camera.set('output', output);
   camera.set('timeout', timeout);
   camera.start();
@@ -170,7 +170,7 @@ var saveData = function (payload) {
     collections: [payload.type, 'new']
   }).result(
     function(response) {
-      console.log('Loaded the following documents (data):');
+      console.log('Saved document(s) to MarkLogic:');
       response.documents.forEach( function(document) {
         console.log('  ' + document.uri);
       });
