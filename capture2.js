@@ -14,28 +14,37 @@ var board = null,
     socket = null,
     camera = null,
     intervalId = null,
-    motionFlag = config.bot.motion,
-    ledFlag = false,
-    output = config.raspicam.output,
-    timestamp = '',
-    trigger = '',
     ip = null,
     buffer = null,
-    id = null;
+    id = null,
+    now = null,
+    ledFlag = false,
+    motionFlag = config.bot.motion,
+    output = config.raspicam.output,
+    captureTime = '',
+    saveTime = '',
+    trigger = '',
+    base64 = '';
 
-// Set IP addresses
+/*
+ * IP ADDRESS
+ */
 if (ifaces.wlan0 && ifaces.wlan0[0]) {
-  ip = ifaces.wlan0[0].address; //.replace(/\./g, '-');
+  ip = ifaces.wlan0[0].address;
 }
 else if (ifaces.eth1 && ifaces.eth1[0]) {
-  ip = ifaces.eth1[0].address; //.replace(/\./g, '-');
+  ip = ifaces.eth1[0].address;
 }
 
-// BOARD SETUP
+/*
+ * BOARD
+ */
 board = new five.Board({ io: new raspi() });
 board.on('ready', function () {
 
-  // MOTION SENSOR SETUP
+  /*
+   * MOTION SENSOR
+   */
   motion = new five.Motion('P1-7');
   motion.on('calibrated', function () {
     console.log('calibrated');
@@ -51,12 +60,16 @@ board.on('ready', function () {
     console.log('motionend');
   });
 
-  // LED SETUP
+  /*
+   * LED
+   */
   led = new five.Led('P1-13');
 
 });
 
-// SOCKET SETUP
+/*
+ * SOCKET
+ */
 socket = require('socket.io-client')(
   'http://'+config.dashboard.host+':'+config.dashboard.port
 );
@@ -72,14 +85,13 @@ socket.on('motion', function(data){
     trigger = 'socket';
     motionFlag = data.toggle;
     socket.emit('motionUpdate', {id: config.bot.id, status: motionFlag});
-    saveData({type: 'heartbeat'});
   }
 });
-// LED event received, turn on or off based on data received
+// LED event received, turn on or off
 socket.on('nearby', function(data){
   console.log('nearby received');
   console.dir(data);
-  // if ID is this bot, toggle motion
+  // if ID is this bot, toggle LED
   if (data.id === config.bot.id) {
     trigger = 'socket';
     ledFlag = data.toggle;
@@ -91,14 +103,16 @@ socket.on('nearby', function(data){
     socket.emit('nearbyUpdate', {id: config.bot.id, status: ledFlag});
   }
 });
+// Capture event received, capture image
 socket.on('capture', function(data){
   console.log('capture received');
   console.dir(data);
-  // if ID is this bot and multi not on, capture image
+  // if ID is this bot and multi not on
   if (data.id === config.bot.id && intervalId === null) {
     captureImage(1);
   }
 });
+// Multi event received, capture image
 socket.on('multi', function(data){
   console.log('multi received');
   console.dir(data);
@@ -116,56 +130,62 @@ socket.on('multi', function(data){
   }
 });
 
-function getTimestamp () {
-  var d = new Date();
-  return d.toISOString();
-}
-
-// CAMERA SETUP
+/*
+ * CAMERA
+ */
 camera = new raspicam(config.raspicam);
-camera.on('start', function(err, timestamp){
-  console.log('Image capture started at: ' + timestamp );
+camera.on('start', function(err, ts){
+  console.log('Image capture started at: ' + ts);
 });
-camera.on('read', function(err, timestamp, filename){
+camera.on('read', function(err, ts, filename){
   console.log('Image captured with filename: ' + filename);
 });
-camera.on('exit', function(timestamp){
-  console.log('MarkLogic save started at: ' + timestamp);
+camera.on('exit', function(ts){
+  console.log('MarkLogic save started at: ' + ts);
   buffer = fs.readFileSync(output);
-  var base64 = buffer.toString('base64');
+  base64 = buffer.toString('base64');
   saveData({
     type: 'image',
     format: 'jpeg',
     encoding: 'base64',
     data: base64
+  }, {
+    timestamp: captureTime
   });
-  console.log('Image capture child process exited at: ' + timestamp);
+  console.log('Image capture child process exited at: ' + ts);
   camera.stop();
 });
-var captureImage = function (timeout) {
-  timestamp = getTimestamp();
-  output = './images/' + timestamp + '.jpg';
+function captureImage (timeout) {
+  now = new Date();
+  captureTime = now.toISOString();
+  output = './images/' + captureTime + '.jpg';
   camera.set('output', output);
   camera.set('timeout', timeout);
   camera.start();
 };
 
-// SAVE DATA TO MARKLOGIC
+/*
+ * DATABASE
+ */
 var db = marklogic.createDatabaseClient(config.marklogic);
-var saveData = function (payload) {
-  id = uuid.v4();
+function saveData (payload, opts) {
+  id = uuid.v4() + '.json';
+  now = new Date();
+  saveTime = now.toISOString();
   var json = {
     id: id,
     deviceId: config.bot.id,
     type: payload.type,
     lat: (gps.lat) ? gps.lat : config.bot.lat,
     lon: (gps.lon) ? gps.lon : config.bot.lon,
-    timestamp: getTimestamp(),
+    timestamp: saveTime,
     ip: ip,
     payload: payload
   };
+  // Override with any opts
+  for (var prop in opts) { json[prop] = opts[prop]; }
   db.documents.write({
-    uri: id + '.json',
+    uri: id,
     content: json,
     collections: [payload.type]
   }).result(
@@ -182,5 +202,8 @@ var saveData = function (payload) {
   );
 };
 
+/*
+ * HEARTBEAT
+ */
 saveData({type: 'heartbeat'});
 setInterval(saveData, config.bot.heartbeat, {type: 'heartbeat'});
