@@ -118,15 +118,7 @@ socket.on('multi', function(data){
 
 function getTimestamp () {
   var d = new Date();
-  // var ts =
-  //   d.getFullYear() +'-'+
-  //   ('0' + (d.getMonth()+1)).slice(-2) +'-'+
-  //   ('0' + d.getDate()).slice(-2) + '_' +
-  //   ('0' + d.getHours()).slice(-2) + '-' +
-  //   ('0' + d.getMinutes()).slice(-2) + '-' +
-  //   ('0' + d.getSeconds()).slice(-2);
-  var ts = d.toISOString();
-  return ts;
+  return d.toISOString();
 }
 
 // CAMERA SETUP
@@ -140,7 +132,6 @@ camera.on('read', function(err, timestamp, filename){
 camera.on('exit', function(timestamp){
   console.log('start marklogic save, timestamp: ' + timestamp);
   buffer = fs.readFileSync(output);
-  savePhoto(buffer);
   var base64 = buffer.toString('base64');
   saveData({
     type: 'image',
@@ -159,82 +150,9 @@ var capturePhoto = function (timeout) {
   camera.start();
 };
 
-// SAVE PHOTO TO MARKLOGIC
+// SAVE DATA TO MARKLOGIC
 var db = marklogic.createDatabaseClient(config.marklogic);
-var savePhoto = function (buffer) {
-  var uri = dateString + '.jpg';
-  // set coords using config defaults if none avail
-  var lat = (gps.lat) ? gps.lat : config.bot.lat;
-  var lon = (gps.lon) ? gps.lon : config.bot.lon;
-  var properties = {
-    cat: 'photo',
-    uri: uri,
-    id: config.bot.id,
-    lat: lat,
-    lon: lon,
-    tr: trigger,
-    ts: dateString,
-    ip: ip
-  };
-  db.documents.write({
-    uri: uri,
-    content: buffer,
-    collections: ['photos'],
-    properties: properties
-  }).result(
-    function(response) {
-      console.log('Loaded the following documents:');
-      response.documents.forEach( function(document) {
-        console.log('  ' + document.uri);
-      });
-      socket.emit('captureUpdate', properties);
-    },
-    function(error) {
-      console.log(JSON.stringify(error, null, 2));
-    }
-  );
-};
-
-// SAVE BOT HEARTBEAT TO MARKLOGIC
-var saveBot = function () {
-  // set coords using config defaults if none avail
-  var lat = (gps.lat) ? gps.lat : config.bot.lat;
-  var lon = (gps.lon) ? gps.lon : config.bot.lon;
-  dateString = getTimestamp();
-  var properties = {
-    cat: 'bot',
-    id: config.bot.id,
-    lat: lat,
-    lon: lon,
-    ts: dateString,
-    ip: ip,
-    mot: motionFlag
-  };
-  db.documents.write({
-    uri: config.bot.id + '.json',
-    content: properties,
-    collections: ['bots'],
-    // save bot data as properties same as photos so we can retrieve similarly
-    properties: properties
-  }).result(
-    function(response) {
-      console.log('Loaded the following documents:');
-      response.documents.forEach( function(document) {
-        console.log('  ' + document.uri);
-      });
-      socket.emit('botUpdate', properties);
-    },
-    function(error) {
-      console.log(JSON.stringify(error, null, 2));
-    }
-  );
-};
-
-// SAVE DATA (ALL JSON, GENERIC)
 var saveData = function (payload) {
-  // var lat = (gps.lat) ? gps.lat : config.bot.lat;
-  // var lon = (gps.lon) ? gps.lon : config.bot.lon;
-  // dateString = getTimestamp();
   id = uuid.v4();
   var json = {
     id: id,
@@ -256,7 +174,7 @@ var saveData = function (payload) {
       response.documents.forEach( function(document) {
         console.log('  ' + document.uri);
       });
-      //socket.emit('dataSaved', json);
+      socket.emit('dataSaved', {id: id});
     },
     function(error) {
       console.log(JSON.stringify(error, null, 2));
@@ -264,6 +182,5 @@ var saveData = function (payload) {
   );
 };
 
-saveBot();
 saveData({type: 'heartbeat'});
 setInterval(saveBot, config.bot.heartbeat, 'foo');
