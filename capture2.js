@@ -175,7 +175,6 @@ function saveData (payload, opts) {
   var json = {
     id: id,
     deviceId: config.bot.id,
-    type: payload.type,
     lat: (gps.lat) ? gps.lat : config.bot.lat,
     lon: (gps.lon) ? gps.lon : config.bot.lon,
     timestamp: saveTime,
