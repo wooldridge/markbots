@@ -167,7 +167,7 @@ var saveData = function (payload) {
   db.documents.write({
     uri: id + '.json',
     content: json,
-    collections: [payload.type, 'new']
+    collections: [payload.type]
   }).result(
     function(response) {
       console.log('Saved document(s) to MarkLogic:');
