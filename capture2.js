@@ -255,7 +255,7 @@ var saveData = function (payload) {
       response.documents.forEach( function(document) {
         console.log('  ' + document.uri);
       });
-      socket.emit('dataSaved', json);
+      //socket.emit('dataSaved', json);
     },
     function(error) {
       console.log(JSON.stringify(error, null, 2));
