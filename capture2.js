@@ -141,19 +141,23 @@ camera.on('read', function(err, ts, filename){
   console.log('Image captured with filename: ' + filename);
 });
 camera.on('exit', function(ts){
-  console.log('MarkLogic save started at: ' + ts);
-  buffer = fs.readFileSync(output);
-  base64 = buffer.toString('base64');
-  saveData({
-    type: 'image',
-    format: 'jpeg',
-    encoding: 'base64',
-    data: base64
-  }, {
-    timestamp: captureTime
-  });
-  console.log('Image capture child process exited at: ' + ts);
-  camera.stop();
+  try {
+    console.log('MarkLogic save started at: ' + ts);
+    buffer = fs.readFileSync(output);
+    base64 = buffer.toString('base64');
+    saveData({
+      type: 'image',
+      format: 'jpeg',
+      encoding: 'base64',
+      data: base64
+    }, {
+      timestamp: captureTime
+    });
+    console.log('Image capture child process exited at: ' + ts);
+    camera.stop();
+  } catch (err) {
+    console.dir(err);
+  }
 });
 function captureImage (timeout) {
   now = new Date();
