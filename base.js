@@ -67,55 +67,42 @@ router.get('/photos', function(req, res, next) {
         var max = '2020-12-31T23:59:59-07:00';
       }
 
-  var coll = q.collection("image");
-
-  console.dir(coll);
-
   // where clause
   var whereClause = [
-      coll
-      //q.collection("image"),
+      q.collection("image"),
       // Range minimum
-      // q.range(
-      //   'ts',
-      //   q.datatype('dateTime'),
-      //   '>=',
-      //   min
-      // ),
-      // // Range maximum
-      // q.range(
-      //   'ts',
-      //   q.datatype('dateTime'),
-      //   '<=',
-      //   max
-      // ),
-      // // Bot ID
-      // q.range(
-      //   'id',
-      //   q.datatype('string'),
-      //   (id === '') ? '!=' : '=',
-      //   id
-      // )
+      q.range(
+        'ts',
+        q.datatype('dateTime'),
+        '>=',
+        min
+      ),
+      // Range maximum
+      q.range(
+        'ts',
+        q.datatype('dateTime'),
+        '<=',
+        max
+      ),
+      // Bot ID
+      q.range(
+        'id',
+        q.datatype('string'),
+        (id === '') ? '!=' : '=',
+        id
+      )
   ];
-
-  var geo = q.geospatial(
-    q.geoPropertyPair('loc', 'lat', 'lon'),
-    q.box(parseFloat(lat2), parseFloat(lon2), parseFloat(lat1), parseFloat(lon1))
-  );
-
-  console.dir(geo);
 
   // Add a geospatial constraint if the coords are passed in
   // lat1 - N, lon1 - E, lat2 - S, lon2 - W
   if (lat1 && lon1 && lat2 && lon2) {
     whereClause.push(
-      //q.propertiesFragment(
-        geo
-      //)
+      q.geospatial(
+        q.geoPropertyPair('loc', 'lat', 'lon'),
+        q.box(parseFloat(lat2), parseFloat(lon2), parseFloat(lat1), parseFloat(lon1))
+      )
     );
   }
-
-  console.dir(whereClause);
 
   db.documents.query(
     q.where(whereClause)
