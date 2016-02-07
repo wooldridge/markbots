@@ -160,7 +160,7 @@ router.get('/photo', function(req, res, next) {
 });
 
 // GET photo encoded as Base64
-router.get('/photoBase64', function(req, res, next) {
+router.get('/photo2', function(req, res, next) {
   // params from URL
   var uri = req.query.uri ? req.query.uri : '';
   db.documents.read(uri)
@@ -192,6 +192,39 @@ router.get('/bots', function(req, res, next) {
       )
     )
     .withOptions({categories: 'properties'})
+    .slice(parseInt(start), parseInt(length))
+  )
+  .result(function(documents) {
+      var results = [];
+      documents.forEach(function(document) {
+        results.push(document)
+      });
+      console.log("Result count: " + results.length);
+      res.json(results);
+      }, function(error) {
+        console.dir(error);
+    });
+});
+
+// GET bot data (revised)
+router.get('/bots2', function(req, res, next) {
+  // params from URL
+  var start = req.query.start ? req.query.start : 1,
+      length = req.query.length ? req.query.length : 20,
+      sort = req.query.sort ? req.query.sort : 'descending';
+  db.documents.query(
+    q.where(
+      q.collection("heartbeat")//,
+      //q.fragmentScope('properties')
+    )
+    // @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
+    // .orderBy(
+    //   q.sort(
+    //     q.element(q.qname('http://marklogic.com/xdmp/property', 'last-modified')),
+    //     sort
+    //   )
+    // )
+    // .withOptions({categories: 'properties'})
     .slice(parseInt(start), parseInt(length))
   )
   .result(function(documents) {
