@@ -93,15 +93,19 @@ router.get('/photos', function(req, res, next) {
       )
   ];
 
+  var geo = q.geospatial(
+    q.geoPropertyPair('loc', 'lat', 'lon'),
+    q.box(parseFloat(lat2), parseFloat(lon2), parseFloat(lat1), parseFloat(lon1))
+  );
+
+  console.dir(geo);
+
   // Add a geospatial constraint if the coords are passed in
   // lat1 - N, lon1 - E, lat2 - S, lon2 - W
   if (lat1 && lon1 && lat2 && lon2) {
     whereClause.push(
       //q.propertiesFragment(
-        q.geospatial(
-          q.geoPropertyPair('loc', 'lat', 'lon'),
-          q.box(parseFloat(lat2), parseFloat(lon2), parseFloat(lat1), parseFloat(lon1))
-        )
+        geo
       //)
     );
   }
