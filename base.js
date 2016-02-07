@@ -67,9 +67,14 @@ router.get('/photos', function(req, res, next) {
         var max = '2020-12-31T23:59:59-07:00';
       }
 
+  var coll = q.collection("image");
+
+  console.dir(coll);
+
   // where clause
   var whereClause = [
-      q.collection("image")//,
+      coll
+      //q.collection("image"),
       // Range minimum
       // q.range(
       //   'ts',
