@@ -218,13 +218,20 @@ router.get('/bots2', function(req, res, next) {
       //q.fragmentScope('properties')
     )
     // @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
-    // .orderBy(
-    //   q.sort(
-    //     q.element(q.qname('http://marklogic.com/xdmp/property', 'last-modified')),
-    //     sort
-    //   )
-    // )
-    // .withOptions({categories: 'properties'})
+    .orderBy(
+      q.sort(
+        'timestamp',
+        sort
+      )
+    )
+      // var built = qlib.orderBy(
+      //     'key1',
+      //     q.field('field1'),
+      //     q.sort('key2', 'ascending'),
+      //     q.score('logtf'),
+      //     q.sort(q.score(), 'descending')
+      // );
+    .withOptions({categories: 'properties'})
     .slice(parseInt(start), parseInt(length))
   )
   .result(function(documents) {
