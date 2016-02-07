@@ -57,7 +57,8 @@ router.get('/data', function(req, res, next) {
       lat1 = req.query.lat1 ? req.query.lat1 : '',
       lon1 = req.query.lon1 ? req.query.lon1 : '',
       lat2 = req.query.lat2 ? req.query.lat2 : '',
-      lon2 = req.query.lon2 ? req.query.lon2 : '';
+      lon2 = req.query.lon2 ? req.query.lon2 : '',
+      type = req.query.type ? req.query.type : '';
       if (req.query.min) {
         var parts = req.query.min.split('/');
         var min = parts[2] + '-' + parts[0] + '-' + parts[1] + 'T00:00:00-07:00';
