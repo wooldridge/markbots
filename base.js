@@ -93,6 +93,8 @@ router.get('/photos', function(req, res, next) {
       )
   ];
 
+  console.dir(geo);
+
   var geo = q.geospatial(
     q.geoPropertyPair('loc', 'lat', 'lon'),
     q.box(parseFloat(lat2), parseFloat(lon2), parseFloat(lat1), parseFloat(lon1))
