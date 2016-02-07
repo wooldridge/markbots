@@ -74,7 +74,6 @@ router.get('/data', function(req, res, next) {
 
   // where clause
   var whereClause = [
-      q.collection("image"),
       // Range minimum
       q.range(
         'ts',
