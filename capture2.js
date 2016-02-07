@@ -172,25 +172,27 @@ function captureImage (timeout) {
  * DATABASE
  */
 var db = marklogic.createDatabaseClient(config.marklogic);
-function saveData (payload, opts) {
+function saveData (data, opts) {
   id = uuid.v4() + '.json';
   now = new Date();
   saveTime = now.toISOString();
   var json = {
     id: id,
-    deviceId: config.bot.id,
-    lat: (gps.lat) ? gps.lat : config.bot.lat,
-    lon: (gps.lon) ? gps.lon : config.bot.lon,
-    timestamp: saveTime,
+    dev: config.bot.id,
+    loc: {
+      lat: (gps.lat) ? gps.lat : config.bot.lat,
+      lon: (gps.lon) ? gps.lon : config.bot.lon
+    }
+    ts: saveTime,
     ip: ip,
-    payload: payload
+    data: data
   };
   // Override with any opts
   for (var prop in opts) { json[prop] = opts[prop]; }
   db.documents.write({
     uri: id,
     content: json,
-    collections: [payload.type]
+    collections: [data.type]
   }).result(
     function(response) {
       console.log('Saved document(s) to MarkLogic:');
