@@ -134,15 +134,15 @@ socket.on('multi', function(data){
  * CAMERA
  */
 camera = new raspicam(config.raspicam);
-camera.on('start', function(err, ts){
-  console.log('Image capture started at: ' + ts);
+camera.on('start', function(err, timestamp){
+  console.log('Image capture started at: ' + timestamp);
 });
-camera.on('read', function(err, ts, filename){
+camera.on('read', function(err, timestamp, filename){
   console.log('Image captured with filename: ' + filename);
 });
-camera.on('exit', function(ts){
+camera.on('exit', function(timestamp){
   try {
-    console.log('MarkLogic save started at: ' + ts);
+    console.log('MarkLogic save started at: ' + timestamp);
     buffer = fs.readFileSync(output);
     base64 = buffer.toString('base64');
     saveData({
@@ -151,9 +151,9 @@ camera.on('exit', function(ts){
       encoding: 'base64',
       data: base64
     }, {
-      timestamp: captureTime
+      ts: captureTime
     });
-    console.log('Image capture child process exited at: ' + ts);
+    console.log('Image capture child process exited at: ' + timestamp);
     camera.stop();
   } catch (err) {
     console.dir(err);
