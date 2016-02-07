@@ -206,7 +206,7 @@ router.get('/bots', function(req, res, next) {
     });
 });
 
-// GET bot data (revised)
+// GET bot heartbeat
 router.get('/bots2', function(req, res, next) {
   // params from URL
   var start = req.query.start ? req.query.start : 1,
@@ -214,23 +214,14 @@ router.get('/bots2', function(req, res, next) {
       sort = req.query.sort ? req.query.sort : 'descending';
   db.documents.query(
     q.where(
-      q.collection("heartbeat")//,
-      //q.fragmentScope('properties')
+      q.collection("heartbeat")
     )
-    // @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
     .orderBy(
       q.sort(
         'timestamp',
         sort
       )
     )
-      // var built = qlib.orderBy(
-      //     'key1',
-      //     q.field('field1'),
-      //     q.sort('key2', 'ascending'),
-      //     q.score('logtf'),
-      //     q.sort(q.score(), 'descending')
-      // );
     .withOptions({categories: 'properties'})
     .slice(parseInt(start), parseInt(length))
   )
@@ -252,6 +243,21 @@ router.get('/bot', function(req, res, next) {
   var id = req.query.id ? req.query.id : '',
       uri = id + '.json';
   db.documents.read({uris: uri, categories: 'properties'})
+  .result(function(documents) {
+      res.type('application/json');
+      console.dir(documents[0]);
+      res.json(documents[0]);
+      }, function(error) {
+        console.dir(error);
+    });
+});
+
+// GET bot2
+router.get('/bot2', function(req, res, next) {
+  // params from URL
+  var id = req.query.id ? req.query.id : '',
+      uri = id + '.json';
+  db.documents.read({uris: uri})//, categories: 'properties'})
   .result(function(documents) {
       res.type('application/json');
       console.dir(documents[0]);
