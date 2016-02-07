@@ -69,28 +69,28 @@ router.get('/photos', function(req, res, next) {
 
   // where clause
   var whereClause = [
-      q.collection("image"),
+      q.collection("image")//,
       // Range minimum
-      q.range(
-        'ts',
-        q.datatype('dateTime'),
-        '>=',
-        min
-      ),
-      // Range maximum
-      q.range(
-        'ts',
-        q.datatype('dateTime'),
-        '<=',
-        max
-      ),
-      // Bot ID
-      q.range(
-        'id',
-        q.datatype('string'),
-        (id === '') ? '!=' : '=',
-        id
-      )
+      // q.range(
+      //   'ts',
+      //   q.datatype('dateTime'),
+      //   '>=',
+      //   min
+      // ),
+      // // Range maximum
+      // q.range(
+      //   'ts',
+      //   q.datatype('dateTime'),
+      //   '<=',
+      //   max
+      // ),
+      // // Bot ID
+      // q.range(
+      //   'id',
+      //   q.datatype('string'),
+      //   (id === '') ? '!=' : '=',
+      //   id
+      // )
   ];
 
   var geo = q.geospatial(
