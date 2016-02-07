@@ -98,8 +98,6 @@ router.get('/photos', function(req, res, next) {
     q.box(parseFloat(lat2), parseFloat(lon2), parseFloat(lat1), parseFloat(lon1))
   );
 
-  console.dir(geo);
-
   // Add a geospatial constraint if the coords are passed in
   // lat1 - N, lon1 - E, lat2 - S, lon2 - W
   if (lat1 && lon1 && lat2 && lon2) {
@@ -109,6 +107,8 @@ router.get('/photos', function(req, res, next) {
       //)
     );
   }
+
+  console.dir(whereClause);
 
   db.documents.query(
     q.where(whereClause)
