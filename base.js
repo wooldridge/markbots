@@ -178,7 +178,7 @@ router.get('/bots', function(req, res, next) {
 });
 
 // GET bot
-router.get('/bot2', function(req, res, next) {
+router.get('/bot', function(req, res, next) {
   // params from URL
   var id = req.query.id ? req.query.id : '',
       uri = id + '.json';
