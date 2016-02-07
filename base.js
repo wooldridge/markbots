@@ -157,7 +157,7 @@ router.get('/binary', function(req, res, next) {
   db.documents.read(id)
   .result(function(documents) {
       res.type(type);
-      var buff = new Buffer(documents[0].content.data.base64, 'base64');
+      var buff = new Buffer(documents[0].content.data.data, 'base64');
       res.end(buff, 'binary');
       }, function(error) {
         console.dir(error);
