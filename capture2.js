@@ -182,7 +182,7 @@ function saveData (data, opts) {
     loc: {
       lat: (gps.lat) ? gps.lat : config.bot.lat,
       lon: (gps.lon) ? gps.lon : config.bot.lon
-    }
+    },
     ts: saveTime,
     ip: ip,
     data: data
