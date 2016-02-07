@@ -53,6 +53,7 @@ router.get('/data', function(req, res, next) {
       sort = req.query.sort ? req.query.sort : 'descending',
       id = req.query.id ? req.query.id : '',
       dev = req.query.dev ? req.query.dev : '',
+      ip = req.query.ip ? req.query.ip : '',
       lat1 = req.query.lat1 ? req.query.lat1 : '',
       lon1 = req.query.lon1 ? req.query.lon1 : '',
       lat2 = req.query.lat2 ? req.query.lat2 : '',
