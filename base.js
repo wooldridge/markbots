@@ -125,6 +125,8 @@ router.get('/photos', function(req, res, next) {
     );
   }
 
+  console.dir(whereClause);
+
   db.documents.query(
     q.where(whereClause)
     // @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
