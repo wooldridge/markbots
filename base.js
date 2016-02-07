@@ -2,6 +2,9 @@ var config = require('./config'),
     marklogic = require('marklogic'),
     express = require('express');
 
+var TIMESTAMP_MIN = '1970-01-01T00:00:00Z';
+var TIMESTAMP_MAX = '2100-01-01T00:00:00Z';
+
 // Set up EXPRESS
 var app = express(),
     port = config.dashboard.port,
@@ -42,29 +45,30 @@ var deg2rad = function (deg) {
   return deg * (Math.PI/180);
 };
 
-// GET photo data
-router.get('/photos', function(req, res, next) {
+// GET data
+router.get('/data', function(req, res, next) {
   // params from URL
   var start = req.query.start ? req.query.start : 1,
       length = req.query.length ? req.query.length : 20,
       sort = req.query.sort ? req.query.sort : 'descending',
-      tr = req.query.tr ? req.query.tr : '',
       id = req.query.id ? req.query.id : '',
+      dev = req.query.dev ? req.query.dev : '',
       lat1 = req.query.lat1 ? req.query.lat1 : '',
       lon1 = req.query.lon1 ? req.query.lon1 : '',
       lat2 = req.query.lat2 ? req.query.lat2 : '',
-      lon2 = req.query.lon2 ? req.query.lon2 : '';
+      lon2 = req.query.lon2 ? req.query.lon2 : '',
+      type = req.query.type ? req.query.type : '';
       if (req.query.min) {
         var parts = req.query.min.split('/');
         var min = parts[2] + '-' + parts[0] + '-' + parts[1] + 'T00:00:00-07:00';
       } else {
-        var min = '1970-01-01T00:00:00-07:00';
+        var min = TIMESTAMP_MIN;
       }
       if (req.query.max) {
         parts = req.query.max.split('/');
         var max = parts[2] + '-' + parts[0] + '-' + parts[1] + 'T00:00:00-07:00';
       } else {
-        var max = '2020-12-31T23:59:59-07:00';
+        var max = TIMESTAMP_MAX;
       }
 
   // where clause
@@ -84,14 +88,39 @@ router.get('/photos', function(req, res, next) {
         '<=',
         max
       ),
-      // Bot ID
+      // Transmission ID
       q.range(
         'id',
         q.datatype('string'),
         (id === '') ? '!=' : '=',
         id
+      ),
+      // Device ID
+      q.range(
+        'dev',
+        q.datatype('string'),
+        (dev === '') ? '!=' : '=',
+        dev
+      ),
+      // IP address
+      q.range(
+        'ip',
+        q.datatype('string'),
+        (ip === '') ? '!=' : '=',
+        ip
+      ),
+      q.range(
+        '/data/type',
+        q.datatype('string'),
+        (type === '') ? '!=' : '=',
+        type
       )
   ];
+
+  // Add a collection constraint if a type is passed in
+  if (type) {
+    whereClause.push(q.collection(type));
+  }
 
   // Add a geospatial constraint if the coords are passed in
   // lat1 - N, lon1 - E, lat2 - S, lon2 - W
@@ -126,61 +155,16 @@ router.get('/photos', function(req, res, next) {
     });
 });
 
-// GET photo
-router.get('/photo', function(req, res, next) {
-  // params from URL
-  var uri = req.query.uri ? req.query.uri : '';
-  db.documents.read(uri)
-  .result(function(documents) {
-      res.type('application/jpeg');
-      var buff = new Buffer(documents[0].content.payload.base64, 'base64');
-      res.end(buff, 'binary');
-      }, function(error) {
-        console.dir(error);
-    });
-});
-
-// GET bots
-router.get('/bots', function(req, res, next) {
-  // params from URL
-  var start = req.query.start ? req.query.start : 1,
-      length = req.query.length ? req.query.length : 20,
-      sort = req.query.sort ? req.query.sort : 'descending';
-  db.documents.query(
-    q.where(
-      q.collection("heartbeat")
-    )
-    .orderBy(
-      q.sort(
-        'ts',
-        sort
-      )
-    )
-    .withOptions({categories: 'properties'})
-    .slice(parseInt(start), parseInt(length))
-  )
-  .result(function(documents) {
-      var results = [];
-      documents.forEach(function(document) {
-        results.push(document);
-      });
-      console.log("Result count: " + results.length);
-      res.json(results);
-      }, function(error) {
-        console.dir(error);
-    });
-});
-
-// GET bot
-router.get('/bot', function(req, res, next) {
+// GET binary
+router.get('/binary', function(req, res, next) {
   // params from URL
   var id = req.query.id ? req.query.id : '',
-      uri = id + '.json';
-  db.documents.read({uris: uri})
+      type = req.query.type ? req.query.type : '';
+  db.documents.read(id)
   .result(function(documents) {
-      res.type('application/json');
-      console.dir(documents[0]);
-      res.json(documents[0]);
+      res.type(type);
+      var buff = new Buffer(documents[0].content.data.base64, 'base64');
+      res.end(buff, 'binary');
       }, function(error) {
         console.dir(error);
     });

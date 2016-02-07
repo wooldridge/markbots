@@ -173,7 +173,7 @@ function captureImage (timeout) {
  */
 var db = marklogic.createDatabaseClient(config.marklogic);
 function saveData (data, opts) {
-  id = uuid.v4() + '.json';
+  id = uuid.v4();
   now = new Date();
   saveTime = now.toISOString();
   var json = {
