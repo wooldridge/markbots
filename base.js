@@ -70,41 +70,26 @@ router.get('/photos', function(req, res, next) {
   // where clause
   var whereClause = [
       q.collection("image"),
-      //q.fragmentScope('properties'),
       // Range minimum
       q.range(
         'timestamp',
         q.datatype('dateTime'),
         '>=',
-        min//,
-        //q.fragmentScope('properties')
+        min
       ),
       // Range maximum
       q.range(
-        //q.element(q.qname('http://marklogic.com/xdmp/property', 'last-modified')),
         'timestamp',
         q.datatype('dateTime'),
         '<=',
-        max//,
-        //q.fragmentScope('properties')
+        max
       ),
       // Bot ID
       q.range(
-        //q.element(q.qname('http://marklogic.com/xdmp/json/basic', 'id')),
         'id',
         q.datatype('string'),
         (id === '') ? '!=' : '=',
-        id//,
-        //q.fragmentScope('properties')
-      ),
-      // Trigger
-      q.range(
-        //q.element(q.qname('http://marklogic.com/xdmp/json/basic', 'tr')),
-        'tr',
-        q.datatype('string'),
-        (tr === '') ? '!=' : '=',
-        tr//,
-        //q.fragmentScope('properties')
+        id
       )
   ];
 
@@ -125,19 +110,14 @@ router.get('/photos', function(req, res, next) {
     );
   }
 
-  console.dir(whereClause);
-
   db.documents.query(
     q.where(whereClause)
-    // @see http://stackoverflow.com/questions/30091370/marklogic-node-js-sort-on-last-modified
     .orderBy(
       q.sort(
-        //q.element(q.qname('http://marklogic.com/xdmp/property', 'last-modified')),
         'timestamp',
         sort
       )
     )
-    //.withOptions({categories: 'properties'})
     .slice(parseInt(start), parseInt(length))
   )
   .result(function(documents) {
