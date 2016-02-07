@@ -72,14 +72,14 @@ router.get('/photos', function(req, res, next) {
       q.collection("image"),
       // Range minimum
       q.range(
-        'timestamp',
+        'ts',
         q.datatype('dateTime'),
         '>=',
         min
       ),
       // Range maximum
       q.range(
-        'timestamp',
+        'ts',
         q.datatype('dateTime'),
         '<=',
         max
@@ -110,7 +110,7 @@ router.get('/photos', function(req, res, next) {
     q.where(whereClause)
     .orderBy(
       q.sort(
-        'timestamp',
+        'ts',
         sort
       )
     )
@@ -154,7 +154,7 @@ router.get('/bots', function(req, res, next) {
     )
     .orderBy(
       q.sort(
-        'timestamp',
+        'ts',
         sort
       )
     )
