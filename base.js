@@ -97,16 +97,12 @@ router.get('/photos', function(req, res, next) {
   // lat1 - N, lon1 - E, lat2 - S, lon2 - W
   if (lat1 && lon1 && lat2 && lon2) {
     whereClause.push(
-      q.propertiesFragment(
+      //q.propertiesFragment(
         q.geospatial(
-          q.geoElementPair(
-            q.qname('http://marklogic.com/xdmp/property', 'properties'),
-            q.qname('http://marklogic.com/xdmp/json/basic', 'lat'),
-            q.qname('http://marklogic.com/xdmp/json/basic', 'lon')
-          ),
+          q.geoPropertyPair('loc', 'lat', 'lon'),
           q.box(parseFloat(lat2), parseFloat(lon2), parseFloat(lat1), parseFloat(lon1))
         )
-      )
+      //)
     );
   }
 
@@ -168,7 +164,7 @@ router.get('/bots', function(req, res, next) {
   .result(function(documents) {
       var results = [];
       documents.forEach(function(document) {
-        results.push(document)
+        results.push(document);
       });
       console.log("Result count: " + results.length);
       res.json(results);
