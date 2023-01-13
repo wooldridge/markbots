@@ -1,0 +1,16 @@
+# 2023-01-12
+
+Set up Raspberry Pi 2 years after first made MarkBots work.
+
+## GPS Setup
+
+See: https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/setting-everything-up
+
+Had to run the following to get GPS information to show up, via this:
+```
+sudo systemctl stop gpsd.socket
+sudo systemctl disable gpsd.socket
+sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+cgps -s
+```
+
